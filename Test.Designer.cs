@@ -300,9 +300,10 @@
             // 
             // originalBox
             // 
+            this.originalBox.InitialImage = null;
             this.originalBox.Location = new System.Drawing.Point(175, 0);
             this.originalBox.Name = "originalBox";
-            this.originalBox.Size = new System.Drawing.Size(640, 223);
+            this.originalBox.Size = new System.Drawing.Size(640, 480);
             this.originalBox.TabIndex = 1;
             this.originalBox.TabStop = false;
             this.originalBox.Visible = false;
