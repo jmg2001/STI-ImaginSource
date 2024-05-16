@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ic4dotnet.System.Drawing</name>
+    </assembly>
+    <members>
+        <member name="T:ic4.ImageBufferExtensionsSystemDrawing">
+            <summary>
+                Contains extension methods for <see cref="T:ic4.ImageBuffer"/> for interop with the <see cref="N:System.Drawing"/> library.
+            </summary>
+            <example>
+                <para>
+                    Since the members are extension methods, they can be called both explicitly and on image buffers directly,
+                    as if they were member functions.
+                </para>
+                <para>
+                    To call it as a member function, a <c>using</c> directive has to exist for the <c>ic4</c> namespace:
+                </para>
+                <code>
+                    using ic4;
+                    
+                    // (...)
+                    // Get image buffer from somewhere
+                    ImageBuffer imageBuffer = GetImageBuffer();
+                    // Create copy in a System.Drawing.Bitmap object
+                    System.Drawing.Bitmap bmp = imageBuffer.CreateBitmapCopy();
+                </code>
+                <para>
+                    Although not preferred, the function can also be called explicitly:
+                </para>
+                <code>
+                    // Get image buffer from somewhere
+                    ImageBuffer imageBuffer = GetImageBuffer();
+                    // Create copy in a System.Drawing.Bitmap object
+                    System.Drawing.Bitmap bmp = imageBuffer.CreateBitmapCopy(imageBuffer);
+                </code>
+            </example>
+        </member>
+        <member name="M:ic4.ImageBufferExtensionsSystemDrawing.IsBitmapWrapSupported(ic4.ImageBuffer)">
+            <summary>
+                Checks whether <see cref="M:ic4.ImageBufferExtensionsSystemDrawing.CreateBitmapWrap(ic4.ImageBuffer)"/> can work on the
+                image buffer's pixel format.
+            </summary>
+            <param name="buffer">
+                An image buffer
+            </param>
+            <returns>
+                <c>true</c>, if the contents of the image buffer can be wrapped in a <see cref="T:System.Drawing.Bitmap"/>, otherwise <c>false</c>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+                <c>buffer</c> is <c>null</c>
+            </exception>
+            <remarks>
+                <para>
+                    Wrapping the contents of an image buffer in a <see cref="T:System.Drawing.Bitmap"/> is only possible
+                    if the pixel format is one of the following:
+                    <list type="bullet">
+                        <item><see cref="F:ic4.PixelFormat.Mono8"/></item>
+                        <item><see cref="F:ic4.PixelFormat.BGR8"/></item>
+                        <item><see cref="F:ic4.PixelFormat.BGRa8"/></item>
+                    </list>
+                </para>
+            </remarks>
+        </member>
+        <member name="M:ic4.ImageBufferExtensionsSystemDrawing.CreateBitmapWrap(ic4.ImageBuffer)">
+            <summary>
+                Wraps the passed image buffer in a <see cref="T:System.Drawing.Bitmap"/>.
+            </summary>
+            <param name="buffer">
+                An image buffer
+            </param>
+            <returns>
+                A <see cref="T:System.Drawing.Bitmap"/> using the image buffer's memory as pixel storage.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="buffer"/> is <c>null</c>
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                Data of the image buffer's pixel format cannot be wrapped in a <see cref="T:System.Drawing.Bitmap"/>
+            </exception>
+            <remarks>
+                The returned bitmap becomes invalid when the image buffer is disposed.
+            </remarks>
+        </member>
+        <member name="M:ic4.ImageBufferExtensionsSystemDrawing.CreateBitmapCopy(ic4.ImageBuffer)">
+            <summary>
+                Creates a copy of the image buffer and stores it in a <see cref="T:System.Drawing.Bitmap"/>.
+            </summary>
+            <param name="buffer">
+                An image buffer
+            </param>
+            <returns>
+                A <see cref="T:System.Drawing.Bitmap"/> containing a copy of the image data in the passed image buffer.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="buffer"/> is <c>null</c>
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                The pixel format of the image buffer is not supported.
+            </exception>
+        </member>
+    </members>
+</doc>

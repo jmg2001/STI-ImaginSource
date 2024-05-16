@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ic4dotnet.System.Windows.Media</name>
+    </assembly>
+    <members>
+        <member name="T:ic4.ImageBufferExtensionsSystemWindowsMedia">
+            <summary>
+                Contains extension methods for <see cref="T:ic4.ImageBuffer"/> for interop with the <see cref="N:System.Windows.Media"/>
+                library.
+            </summary>
+            <example>
+                <para>
+                    Since the members are extension methods, they can be called both explicitly and on image buffers directly,
+                    as if they were member functions.
+                </para>
+                <para>
+                    To call it as a member function, a <c>using</c> directive has to exist for the <c>ic4</c> namespace:
+                </para>
+                <code>
+                    using ic4;
+                    
+                    // (...)
+                    // Get image buffer from somewhere
+                    ImageBuffer imageBuffer = GetImageBuffer();
+                    // Create copy in a BitmapSource object
+                    System.Windows.Media.Imaging.BitmapSource bmp = imageBuffer.CreateBitmapSourceCopy();
+                </code>
+                <para>
+                    Although not preferred, the function can also be called explicitly:
+                </para>
+                <code>
+                    // Get image buffer from somewhere
+                    ImageBuffer imageBuffer = GetImageBuffer();
+                    // Create copy in a BitmapSource object
+                    System.Windows.Media.Imaging.BitmapSource bmp = ImageBufferExtensionsSystemWindowsMedia.CreateBitmapSourceCopy(imageBuffer);
+                </code>
+            </example>
+        </member>
+        <member name="M:ic4.ImageBufferExtensionsSystemWindowsMedia.CopyTo(ic4.ImageBuffer,System.Windows.Media.Imaging.WriteableBitmap)">
+            <summary>
+                Copies the contents of the passed <see cref="T:ic4.ImageBuffer"/> into the passed <see cref="T:System.Windows.Media.Imaging.WriteableBitmap"/>.
+            </summary>
+            <param name="buffer">
+                An image buffer
+            </param>
+            <param name="bmp">
+                A destination bitmap
+                <para>
+                    The <see cref="P:System.Windows.Media.Imaging.BitmapSource.Format"/> of the bitmap must be one of the following:
+                    <list type="bullet">
+                        <item><see cref="P:System.Windows.Media.PixelFormats.Bgr24"/></item>
+                        <item><see cref="P:System.Windows.Media.PixelFormats.Bgra32"/></item>
+                        <item><see cref="P:System.Windows.Media.PixelFormats.Gray8"/></item>
+                        <item><see cref="P:System.Windows.Media.PixelFormats.Gray16"/></item>
+                    </list>
+                </para>
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="buffer"/> is <c>null</c> or <paramref name="bmp"/> is <c>null</c>
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                The passed image buffer and bitmap did not have the same dimensions
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                The pixel format of the bitmap specified by <paramref name="bmp"/> is not supported.
+            </exception>
+            <remarks>
+                If the pixel format of the source image buffer and the format of the destination bitmap is not a perfect match,
+                a conversion operation occurs. For example, bayer raw data can be converted to RGB.
+            </remarks>
+        </member>
+        <member name="M:ic4.ImageBufferExtensionsSystemWindowsMedia.CreateCompatibleWritableBitmap(ic4.ImageBuffer,System.Double,System.Double)">
+            <summary>
+                Creates a <see cref="T:System.Windows.Media.Imaging.WriteableBitmap"/> with a format that the image buffer's contents
+                can be copied or converted into.
+            </summary>
+            <param name="buffer">
+                An image buffer
+            </param>
+            <param name="dpiX">
+                The value to be set in <see cref="P:System.Windows.Media.Imaging.BitmapSource.DpiX"/>
+            </param>
+            <param name="dpiY">
+                The value to be set in <see cref="P:System.Windows.Media.Imaging.BitmapSource.DpiY"/>
+            </param>
+            <returns>
+                A <see cref="T:System.Windows.Media.Imaging.WriteableBitmap"/> that can be used as the
+                target of a <see cref="M:ic4.ImageBufferExtensionsSystemWindowsMedia.CopyTo(ic4.ImageBuffer,System.Windows.Media.Imaging.WriteableBitmap)"/> operation.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="buffer"/> is <c>null</c>
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                The pixel format of the passed image buffer is not supported.
+            </exception>
+        </member>
+        <member name="M:ic4.ImageBufferExtensionsSystemWindowsMedia.CreateBitmapSourceCopy(ic4.ImageBuffer,System.Double,System.Double)">
+            <summary>
+                Creates a new <see cref="T:System.Windows.Media.Imaging.BitmapSource"/> containing a copy of the image data of the passed image buffer.
+            </summary>
+            <param name="buffer">
+                An image buffer
+            </param>
+            <param name="dpiX">
+                The value to be set in <see cref="P:System.Windows.Media.Imaging.BitmapSource.DpiX"/>
+            </param>
+            <param name="dpiY">
+                The value to be set in <see cref="P:System.Windows.Media.Imaging.BitmapSource.DpiY"/>
+            </param>
+            <returns>
+                A <see cref="T:System.Windows.Media.Imaging.BitmapSource"/> containing a copy of the image data of the passed image buffer.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="buffer"/> is <c>null</c>
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                The pixel format of the passed image buffer is not supported.
+            </exception>
+        </member>
+    </members>
+</doc>

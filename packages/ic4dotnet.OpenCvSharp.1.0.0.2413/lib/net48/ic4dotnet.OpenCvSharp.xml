@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ic4dotnet.OpenCvSharp</name>
+    </assembly>
+    <members>
+        <member name="T:ic4.ImageBufferExtensionsOpenCvSharp">
+            <summary>
+                Contains extension methods for <see cref="T:ic4.ImageBuffer"/> for interop with the OpenCvSharp
+                library (<see href="https://github.com/shimat/opencvsharp/">https://github.com/shimat/opencvsharp</see>).
+            </summary>
+            <example>
+                <para>
+                    Since the members are extension methods, they can be called both explicitly and on image buffers directly,
+                    as if they were member functions.
+                </para>
+                <para>
+                    To call it as a member function, a <c>using</c> directive has to exist for the <c>ic4</c> namespace:
+                </para>
+                <code>
+                    using ic4;
+                    
+                    // (...)
+                    // Get image buffer from somewhere
+                    ImageBuffer imageBuffer = GetImageBuffer();
+                    // Create copy in a OpenCvSharp.Mat object
+                    OpenCvSharp.Mat mat = imageBuffer.CreateOpenCvCopy();
+                </code>
+                <para>
+                    Although not preferred, the function can also be called explicitly:
+                </para>
+                <code>
+                    // Get image buffer from somewhere
+                    ImageBuffer imageBuffer = GetImageBuffer();
+                    // Create copy in a OpenCvSharp.Mat object
+                    OpenCvSharp.Mat mat = ImageBufferExtensionsOpenCvSharp.CreateOpenCvCopy(imageBuffer);
+                </code>
+            </example>
+        </member>
+        <member name="M:ic4.ImageBufferExtensionsOpenCvSharp.IsOpenCvWrapSupported(ic4.ImageBuffer)">
+            <summary>
+                Checks whether <see cref="M:ic4.ImageBufferExtensionsOpenCvSharp.CreateOpenCvWrap(ic4.ImageBuffer)"/> can work on the
+                image buffer's pixel format.
+            </summary>
+            <param name="buffer">
+                An image buffer
+            </param>
+            <returns>
+                <c>true</c>, if the contents of the image buffer can be wrapped in a <c>OpenCvSharp.Mat</c>, otherwise <c>false</c>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+                <c>buffer</c> is <c>null</c>
+            </exception>
+            <remarks>
+                <para>
+                    Wrapping the contents of an image buffer in a <c>OpenCvSharp.Mat</c> is only possible
+                    if the pixel format is one of the following:
+                    <list type="bullet">
+                        <item><see cref="F:ic4.PixelFormat.Mono8"/> any Bayer8 format</item>
+                        <item><see cref="F:ic4.PixelFormat.Mono16"/> or any Bayer16 format</item>
+                        <item><see cref="F:ic4.PixelFormat.BGRa8"/>, <see cref="F:ic4.PixelFormat.BGR8"/> or <see cref="F:ic4.PixelFormat.BGRa16"/></item>
+                        <item><see cref="F:ic4.PixelFormat.YCbCr422_8"/> or <see cref="F:ic4.PixelFormat.YUV422_8"/></item>
+                    </list>
+                </para>
+            </remarks>
+        </member>
+        <member name="M:ic4.ImageBufferExtensionsOpenCvSharp.CreateOpenCvWrap(ic4.ImageBuffer)">
+            <summary>
+                Wraps the passed image buffer in a <c>OpenCvSharp.Mat</c>.
+            </summary>
+            <param name="buffer">
+                An image buffer
+            </param>
+            <returns>
+                A <c>OpenCvSharp.Mat</c> using the image buffer's memory as pixel storage
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="buffer"/> is <c>null</c>
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                Data of the image buffer's pixel format cannot be wrapped in a <c>OpenCvSharp.Mat</c>.
+            </exception>
+            <remarks>
+            </remarks>
+        </member>
+        <member name="M:ic4.ImageBufferExtensionsOpenCvSharp.CreateOpenCvCopy(ic4.ImageBuffer)">
+            <summary>
+                Creates a copy of the image buffer and stores it in a <c>OpenCvSharp.Mat</c>.
+            </summary>
+            <param name="buffer">
+                An image buffer
+            </param>
+            <returns>
+                A <c>OpenCvSharp.Mat</c> containing a copy of the image data in the passed image buffer.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="buffer"/> is <c>null</c>
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                The pixel format of the image buffer is not supported.
+            </exception>
+        </member>
+    </members>
+</doc>

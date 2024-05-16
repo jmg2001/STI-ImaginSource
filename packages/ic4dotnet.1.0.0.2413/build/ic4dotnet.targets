@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+    <None Include="$(MSBuildThisFileDirectory)../runtimes/win-x64/native/ic4core.dll">
+      <Link>runtimes/win-x64/native/ic4core.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)../runtimes/win-x64/native/ic4_dutils_avx2.dll">
+      <Link>runtimes/win-x64/native/ic4_dutils_avx2.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)../runtimes/win-x64/native/ic4plugin_display_win32_opengl.dll">
+      <Link>runtimes/win-x64/native/ic4plugin_display_win32_opengl.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)../runtimes/win-x64/native/ic4plugin_video_win32_h26x.dll">
+      <Link>runtimes/win-x64/native/ic4plugin_video_win32_h26x.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Linux')) AND '$(Platform)' == 'x64'">
+    <None Include="$(MSBuildThisFileDirectory)/runtimes/linux-x64/native/libic4core.so">
+      <Link>runtimes/linux-x64/native/libic4core.so</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)/runtimes/linux-x64/native/libic4_dutils_avx2.so">
+      <Link>runtimes/linux-x64/native/libic4_dutils_avx2.so</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)/runtimes/linux-x64/native/libic4plugin_display_linux_gstreamer.so">
+      <Link>runtimes/linux-x64/native/libic4plugin_display_linux_gstreamer.so</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)/runtimes/linux-x64/native/libic4plugin_video_linux_h26x.so">
+      <Link>runtimes/linux-x64/native/libic4plugin_video_linux_h26x.so</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Linux')) AND '$(Platform)' == 'arm64'">
+    <None Include="$(MSBuildThisFileDirectory)/runtimes/linux-arm64/native/libic4core.so">
+      <Link>runtimes/linux-arm64/native/libic4core.so</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)/runtimes/linux-arm64/native/libic4plugin_display_linux_gstreamer.so">
+      <Link>runtimes/linux-arm64/native/libic4plugin_display_linux_gstreamer.so</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)/runtimes/linux-arm64/native/libic4plugin_video_linux_h26x.so">
+      <Link>runtimes/linux-arm64/native/libic4plugin_video_linux_h26x.so</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

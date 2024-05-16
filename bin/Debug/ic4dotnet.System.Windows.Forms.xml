@@ -1,0 +1,219 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ic4dotnet.System.Windows.Forms</name>
+    </assembly>
+    <members>
+        <member name="T:ic4.WinForms.Dialogs">
+            <summary>
+                Static class containing functions to show builtin dialogs
+            </summary>
+        </member>
+        <member name="M:ic4.WinForms.Dialogs.ShowDeviceDialog(ic4.Grabber,System.Windows.Forms.IWin32Window)">
+            <summary>
+                Shows a dialog that lets the user select a video capture device.
+                <para>
+                    If the user selects a device, it is opened in the passed <paramref name="grabber"/> object.
+                </para>
+            </summary>
+            <param name="grabber">
+                A grabber object
+            </param>
+            <param name="parentWindow">
+                A parent window for the dialog
+            </param>
+            <returns>
+                <c>true</c> if a device was opened successfully, otherwise <c>false</c>
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="grabber"/> is <c>null</c>
+            </exception>
+        </member>
+        <member name="M:ic4.WinForms.Dialogs.ShowDevicePropertyDialog(ic4.Grabber,System.Windows.Forms.IWin32Window,ic4.WinForms.PropertyDialogFlags,System.String,System.String,ic4.PropertyVisibility,System.String)">
+            <summary>
+                Show a dialog to let the user configure the properties of the video capture device opened in <paramref name="grabber"/>.
+                <para>
+                    If the user cancels the dialog, all properties are restored to the state they were in when the dialog was opened.
+                </para>        
+            </summary>
+            <param name="grabber">
+                A grabber with an opened video capture device
+            </param>
+            <param name="parentWindow">
+                A parent window for the dialog
+            </param>
+            <param name="flags">
+                Customizes dialog behavior
+            </param>
+            <param name="category">
+                Category of properties to show in the dialog
+            </param>
+            <param name="title">
+                The title of the dialog. If <c>null</c>, a default title is set.
+            </param>
+            <param name="initialVisibility">
+                Pre-selects a property visibility in the property dialog's visibility selector.
+            </param>
+            <param name="initialFilter">
+                Inserts a text into the property dialog's filter textbox.
+            </param>
+            <returns>
+                <c>true</c> if the dialog was displayed and exited using the OK button, otherwise <c>false</c>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="grabber"/> is <c>null</c>
+            </exception>
+        </member>
+        <member name="M:ic4.WinForms.Dialogs.ShowPropertyMapDialog(ic4.PropertyMap,System.Windows.Forms.IWin32Window,ic4.WinForms.PropertyDialogFlags,System.String,System.String,ic4.PropertyVisibility,System.String)">
+            <summary>
+                Show a dialog to let the user configure properties in the passed <see cref="T:ic4.PropertyMap"/>.
+                <para>
+                    If the user cancels the dialog, all properties are restored to the state they were in when the dialog was opened.
+                </para>
+                <para>
+                    When displaying the <see cref="T:ic4.PropertyMap"/> of an opened video capture device (<see cref="P:ic4.Grabber.DevicePropertyMap"/>),
+                    this function does not allow changing certain properties when there is an active data stream.
+                    Use <see cref="M:ic4.WinForms.Dialogs.ShowDevicePropertyDialog(ic4.Grabber,System.Windows.Forms.IWin32Window,ic4.WinForms.PropertyDialogFlags,System.String,System.String,ic4.PropertyVisibility,System.String)"/> with
+                    <see cref="F:ic4.WinForms.PropertyDialogFlags.AllowStreamRestart"/> to show a dialog that allows changing stream-defining properties.
+                </para>
+            </summary>
+            <param name="map">
+                A property map
+            </param>
+            <param name="parentWindow">
+                A parent window for the dialog
+            </param>
+            <param name="flags">
+                Customizes dialog behavior
+            </param>
+            <param name="category">
+                Category of properties to show in the dialog
+            </param>
+            <param name="title">
+                The title of the dialog. If <c>null</c>, a default title is set.
+            </param>
+            <param name="initialVisibility">
+                Pre-selects a property visibility in the property dialog's visibility selector.
+            </param>
+            <param name="initialFilter">
+                Inserts a text into the property dialog's filter textbox.
+            </param>
+            <returns>
+                <c>true</c> if the dialog was displayed and exited using the OK button, otherwise <c>false</c>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:ic4.WinForms.Dialogs.ShowSelectDeviceDialog(System.Windows.Forms.IWin32Window)">
+            <summary>
+                Shows a dialog that lets the user select a video capture device
+            </summary>
+            <param name="parentWindow">
+                A parent window for the dialog
+            </param>
+            <returns>
+                A <see cref="T:ic4.DeviceInfo"/> object representing the video capture device that was selected, or <c>null</c> if the user
+                did not select a device.
+            </returns>
+        </member>
+        <member name="T:ic4.WinForms.Display">
+            <summary>
+                Windows Forms display control
+            </summary>
+        </member>
+        <member name="P:ic4.WinForms.Display.InternalHandle">
+            <summary>
+                Handle for the display (internal use only)
+            </summary>
+        </member>
+        <member name="M:ic4.WinForms.Display.Dispose(System.Boolean)">
+            <summary>
+                Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:ic4.WinForms.Display.#ctor">
+            <summary>
+                Create a new display
+            </summary>
+        </member>
+        <member name="M:ic4.WinForms.Display.OnLoad(System.EventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:ic4.WinForms.Display.OnPaint(System.Windows.Forms.PaintEventArgs)">
+            <summary>
+                Paints the control background in design mode
+            </summary>
+            <param name="e">
+            </param>
+        </member>
+        <member name="M:ic4.WinForms.Display.DisplayBuffer(ic4.ImageBuffer)">
+            <inheritdoc cref="M:ic4.IDisplay.DisplayBuffer(ic4.ImageBuffer)"/>
+        </member>
+        <member name="P:ic4.WinForms.Display.Statistics">
+            <inheritdoc cref="P:ic4.IDisplay.Statistics"/>
+        </member>
+        <member name="P:ic4.WinForms.Display.RenderPosition">
+            <inheritdoc cref="P:ic4.IDisplay.RenderPosition"/>
+        </member>
+        <member name="P:ic4.WinForms.Display.RenderLeft">
+            <inheritdoc cref="P:ic4.IDisplay.RenderLeft"/>
+        </member>
+        <member name="P:ic4.WinForms.Display.RenderTop">
+            <inheritdoc cref="P:ic4.IDisplay.RenderTop"/>
+        </member>
+        <member name="P:ic4.WinForms.Display.RenderWidth">
+            <inheritdoc cref="P:ic4.IDisplay.RenderWidth"/>
+        </member>
+        <member name="P:ic4.WinForms.Display.RenderHeight">
+            <inheritdoc cref="P:ic4.IDisplay.RenderHeight"/>
+        </member>
+        <member name="F:ic4.WinForms.Display.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:ic4.WinForms.Display.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:ic4.WinForms.PropertyDialogFlags">
+            <summary>
+                Defines flags configuring the behavior of property dialog functions
+            </summary>
+        </member>
+        <member name="F:ic4.WinForms.PropertyDialogFlags.Default">
+            <summary>
+                Default behavior
+            </summary>
+        </member>
+        <member name="F:ic4.WinForms.PropertyDialogFlags.AllowStreamRestart">
+            <summary>
+                Allows the user to change the value of device properties that would require a stream restart to do so.
+                <para>
+                    The dialog will automatically restart the stream when one of those properties is changed.
+                </para>
+            </summary>
+        </member>
+        <member name="F:ic4.WinForms.PropertyDialogFlags.RestoreStateOnCancel">
+            <summary>
+                Instructs the dialog to initially save the state of all properties, and restore them to their original
+                value if the dialog is closed using the Cancel button.
+            </summary>
+        </member>
+        <member name="F:ic4.WinForms.PropertyDialogFlags.ShowTopCategory">
+            <summary>
+                If set, the top-level category is displayed in the property tree view of the property dialog.
+            </summary>
+        </member>
+        <member name="F:ic4.WinForms.PropertyDialogFlags.HideFilter">
+            <summary>
+                If set, the dialog does not display the visibility dropdown and filter text box.
+            </summary>
+        </member>
+    </members>
+</doc>
