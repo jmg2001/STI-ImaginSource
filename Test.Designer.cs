@@ -36,7 +36,8 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainTabs = new System.Windows.Forms.TabControl();
             this.imagePage = new System.Windows.Forms.TabPage();
-            this.btnTest = new System.Windows.Forms.Button();
+            this.rightPicture = new System.Windows.Forms.PictureBox();
+            this.leftPicture = new System.Windows.Forms.PictureBox();
             this.originalBox = new System.Windows.Forms.PictureBox();
             this.processROIBox = new System.Windows.Forms.PictureBox();
             this.label8 = new System.Windows.Forms.Label();
@@ -176,6 +177,8 @@
             this.menuStrip1.SuspendLayout();
             this.mainTabs.SuspendLayout();
             this.imagePage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.rightPicture)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.leftPicture)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.originalBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.processROIBox)).BeginInit();
             this.tablePage.SuspendLayout();
@@ -215,7 +218,7 @@
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1273, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1719, 24);
             this.menuStrip1.TabIndex = 13;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -256,13 +259,14 @@
             this.mainTabs.Name = "mainTabs";
             this.mainTabs.Padding = new System.Drawing.Point(20, 3);
             this.mainTabs.SelectedIndex = 0;
-            this.mainTabs.Size = new System.Drawing.Size(1273, 710);
+            this.mainTabs.Size = new System.Drawing.Size(1719, 857);
             this.mainTabs.TabIndex = 120;
             // 
             // imagePage
             // 
             this.imagePage.BackColor = System.Drawing.Color.Silver;
-            this.imagePage.Controls.Add(this.btnTest);
+            this.imagePage.Controls.Add(this.rightPicture);
+            this.imagePage.Controls.Add(this.leftPicture);
             this.imagePage.Controls.Add(this.originalBox);
             this.imagePage.Controls.Add(this.processROIBox);
             this.imagePage.Controls.Add(this.label8);
@@ -272,37 +276,42 @@
             this.imagePage.Location = new System.Drawing.Point(4, 44);
             this.imagePage.Name = "imagePage";
             this.imagePage.Padding = new System.Windows.Forms.Padding(3);
-            this.imagePage.Size = new System.Drawing.Size(1265, 662);
+            this.imagePage.Size = new System.Drawing.Size(1711, 809);
             this.imagePage.TabIndex = 0;
             this.imagePage.Text = "Image";
             // 
-            // btnTest
+            // rightPicture
             // 
-            this.btnTest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnTest.BackColor = System.Drawing.Color.Silver;
-            this.btnTest.Location = new System.Drawing.Point(735, 68);
-            this.btnTest.Name = "btnTest";
-            this.btnTest.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.btnTest.Size = new System.Drawing.Size(103, 55);
-            this.btnTest.TabIndex = 119;
-            this.btnTest.Text = "TEST";
-            this.btnTest.UseVisualStyleBackColor = false;
-            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
+            this.rightPicture.Image = global::STI.Properties.Resources.IMAGE;
+            this.rightPicture.Location = new System.Drawing.Point(815, 0);
+            this.rightPicture.Name = "rightPicture";
+            this.rightPicture.Size = new System.Drawing.Size(175, 480);
+            this.rightPicture.TabIndex = 122;
+            this.rightPicture.TabStop = false;
+            // 
+            // leftPicture
+            // 
+            this.leftPicture.Image = global::STI.Properties.Resources.IMAGE;
+            this.leftPicture.Location = new System.Drawing.Point(0, 0);
+            this.leftPicture.Name = "leftPicture";
+            this.leftPicture.Size = new System.Drawing.Size(175, 480);
+            this.leftPicture.TabIndex = 121;
+            this.leftPicture.TabStop = false;
             // 
             // originalBox
             // 
-            this.originalBox.Location = new System.Drawing.Point(0, 0);
+            this.originalBox.Location = new System.Drawing.Point(175, 0);
             this.originalBox.Name = "originalBox";
-            this.originalBox.Size = new System.Drawing.Size(716, 239);
+            this.originalBox.Size = new System.Drawing.Size(640, 223);
             this.originalBox.TabIndex = 1;
             this.originalBox.TabStop = false;
             this.originalBox.Visible = false;
             // 
             // processROIBox
             // 
-            this.processROIBox.Location = new System.Drawing.Point(0, 238);
+            this.processROIBox.Location = new System.Drawing.Point(175, 217);
             this.processROIBox.Name = "processROIBox";
-            this.processROIBox.Size = new System.Drawing.Size(716, 263);
+            this.processROIBox.Size = new System.Drawing.Size(640, 263);
             this.processROIBox.TabIndex = 0;
             this.processROIBox.TabStop = false;
             this.processROIBox.Visible = false;
@@ -329,7 +338,7 @@
             // 
             // display
             // 
-            this.display.Location = new System.Drawing.Point(0, 0);
+            this.display.Location = new System.Drawing.Point(175, 0);
             this.display.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.display.Name = "display";
             this.display.RenderHeight = 480;
@@ -347,7 +356,7 @@
             this.tablePage.Location = new System.Drawing.Point(4, 44);
             this.tablePage.Name = "tablePage";
             this.tablePage.Padding = new System.Windows.Forms.Padding(3);
-            this.tablePage.Size = new System.Drawing.Size(1265, 662);
+            this.tablePage.Size = new System.Drawing.Size(1711, 809);
             this.tablePage.TabIndex = 1;
             this.tablePage.Text = "Table";
             this.tablePage.UseVisualStyleBackColor = true;
@@ -360,7 +369,7 @@
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(3, 3);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(784, 379);
+            this.dataGridView1.Size = new System.Drawing.Size(1295, 379);
             this.dataGridView1.TabIndex = 117;
             // 
             // productsPage
@@ -376,7 +385,7 @@
             this.productsPage.Location = new System.Drawing.Point(4, 44);
             this.productsPage.Name = "productsPage";
             this.productsPage.Padding = new System.Windows.Forms.Padding(3);
-            this.productsPage.Size = new System.Drawing.Size(1265, 662);
+            this.productsPage.Size = new System.Drawing.Size(1711, 809);
             this.productsPage.TabIndex = 2;
             this.productsPage.Text = "Products";
             this.productsPage.UseVisualStyleBackColor = true;
@@ -434,6 +443,7 @@
             this.CmdAdd.TabIndex = 119;
             this.CmdAdd.Text = "Add";
             this.CmdAdd.UseVisualStyleBackColor = false;
+            this.CmdAdd.Click += new System.EventHandler(this.CmdAdd_Click);
             // 
             // CmdUpdate
             // 
@@ -446,6 +456,7 @@
             this.CmdUpdate.TabIndex = 118;
             this.CmdUpdate.Text = "Update";
             this.CmdUpdate.UseVisualStyleBackColor = false;
+            this.CmdUpdate.Click += new System.EventHandler(this.CmdUpdate_Click);
             // 
             // GroupBox10
             // 
@@ -669,6 +680,7 @@
             this.Cmd_Save.TabIndex = 114;
             this.Cmd_Save.Text = "SET";
             this.Cmd_Save.UseVisualStyleBackColor = false;
+            this.Cmd_Save.Click += new System.EventHandler(this.Cmd_Save_Click);
             // 
             // Chk_Digital_Knife
             // 
@@ -691,11 +703,11 @@
             this.controlsTabs.Cursor = System.Windows.Forms.Cursors.Hand;
             this.controlsTabs.Dock = System.Windows.Forms.DockStyle.Right;
             this.controlsTabs.ItemSize = new System.Drawing.Size(58, 40);
-            this.controlsTabs.Location = new System.Drawing.Point(848, 24);
+            this.controlsTabs.Location = new System.Drawing.Point(1294, 24);
             this.controlsTabs.Name = "controlsTabs";
             this.controlsTabs.Padding = new System.Drawing.Point(20, 3);
             this.controlsTabs.SelectedIndex = 0;
-            this.controlsTabs.Size = new System.Drawing.Size(425, 710);
+            this.controlsTabs.Size = new System.Drawing.Size(425, 857);
             this.controlsTabs.TabIndex = 121;
             // 
             // mainControlPage
@@ -714,7 +726,7 @@
             this.mainControlPage.Location = new System.Drawing.Point(4, 44);
             this.mainControlPage.Name = "mainControlPage";
             this.mainControlPage.Padding = new System.Windows.Forms.Padding(3);
-            this.mainControlPage.Size = new System.Drawing.Size(417, 662);
+            this.mainControlPage.Size = new System.Drawing.Size(417, 809);
             this.mainControlPage.TabIndex = 0;
             this.mainControlPage.Text = "Operation";
             // 
@@ -1205,6 +1217,7 @@
             this.Txt_MinDiameter.Size = new System.Drawing.Size(98, 40);
             this.Txt_MinDiameter.TabIndex = 91;
             this.Txt_MinDiameter.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.Txt_MinDiameter.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Txt_MinDiameter_KeyPress);
             // 
             // Label53
             // 
@@ -1246,6 +1259,7 @@
             this.Txt_MaxDiameter.Size = new System.Drawing.Size(100, 40);
             this.Txt_MaxDiameter.TabIndex = 87;
             this.Txt_MaxDiameter.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.Txt_MaxDiameter.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Txt_MaxDiameter_KeyPress);
             // 
             // configurationPage
             // 
@@ -1258,7 +1272,7 @@
             this.configurationPage.Location = new System.Drawing.Point(4, 44);
             this.configurationPage.Name = "configurationPage";
             this.configurationPage.Padding = new System.Windows.Forms.Padding(3);
-            this.configurationPage.Size = new System.Drawing.Size(417, 662);
+            this.configurationPage.Size = new System.Drawing.Size(417, 809);
             this.configurationPage.TabIndex = 1;
             this.configurationPage.Text = "Configuration";
             // 
@@ -1482,7 +1496,7 @@
             this.advancedPage.Font = new System.Drawing.Font("Alef", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.advancedPage.Location = new System.Drawing.Point(4, 44);
             this.advancedPage.Name = "advancedPage";
-            this.advancedPage.Size = new System.Drawing.Size(417, 662);
+            this.advancedPage.Size = new System.Drawing.Size(417, 809);
             this.advancedPage.TabIndex = 2;
             this.advancedPage.Text = "Advanced";
             // 
@@ -1529,6 +1543,7 @@
             this.txtMinBlobObjects.TabIndex = 88;
             this.txtMinBlobObjects.Text = "0";
             this.txtMinBlobObjects.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtMinBlobObjects.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtMinBlobObjects_KeyPress);
             // 
             // groupBox7
             // 
@@ -1562,6 +1577,7 @@
             this.txtAlpha.TabIndex = 88;
             this.txtAlpha.Text = "0";
             this.txtAlpha.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtAlpha.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtAlpha_KeyPress);
             // 
             // groupBox3
             // 
@@ -1640,10 +1656,10 @@
             this.toolStripSeparator5,
             this.framesProcessedLabel,
             this.framesProcessed});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 709);
+            this.toolStrip1.Location = new System.Drawing.Point(0, 856);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.toolStrip1.Size = new System.Drawing.Size(848, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(1294, 25);
             this.toolStrip1.TabIndex = 122;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -1763,19 +1779,22 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1273, 734);
+            this.ClientSize = new System.Drawing.Size(1719, 881);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.controlsTabs);
             this.Controls.Add(this.mainTabs);
             this.Controls.Add(this.menuStrip1);
             this.Name = "Test";
             this.Text = "Test";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.Test_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.mainTabs.ResumeLayout(false);
             this.imagePage.ResumeLayout(false);
             this.imagePage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.rightPicture)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.leftPicture)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.originalBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.processROIBox)).EndInit();
             this.tablePage.ResumeLayout(false);
@@ -1967,8 +1986,9 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripLabel framesProcessedLabel;
         private System.Windows.Forms.ToolStripLabel framesProcessed;
-        internal System.Windows.Forms.Button btnTest;
         private System.Windows.Forms.ImageList imageList1;
         private ic4.WinForms.Display display;
+        private System.Windows.Forms.PictureBox rightPicture;
+        private System.Windows.Forms.PictureBox leftPicture;
     }
 }

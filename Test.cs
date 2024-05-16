@@ -130,7 +130,7 @@ namespace STI
         bool roiImagesIsDisposed = false;
 
         // Directortio para guardar la imagenes para trabajar, es una carpeta tempoal
-        string imagesPath = "";//Path.GetTempPath();
+        string imagesPath = Path.GetTempPath();
 
         // Crear una lista de blobs
         public List<Blob> Blobs = new List<Blob>();
@@ -191,6 +191,9 @@ namespace STI
             InitializeComponent();
             initializeElements();
             InitializeDataTable();
+
+            OffsetLeft = originalBox.Location.X;
+            OffsetTop = originalBox.Location.Y;
 
             //----------------Only for Debug, delete on production-----------------
             //MessageBox.Show(settings.frames.ToString() + " frames processed in the last execution");
@@ -295,13 +298,11 @@ namespace STI
                             Console.WriteLine($"Failed to save buffer: {err.Message}");
                         }
 
-                        if (triggerPLC)
-                        {
+
 
                             System.Threading.Thread.Sleep(100);
                             Action safeTrigger = delegate { trigger(); };
                             Invoke(safeTrigger);
-                        }
 
                     }
                     else
@@ -535,8 +536,8 @@ namespace STI
             Txt_MaxCompacity.KeyPress += Txt_MaxCompacity_KeyPress;
             Txt_MaxOvality.KeyPress += Txt_MaxOvality_KeyPress;
 
-            originalBox.MouseClick += originalBox_MouseMove;
-            processROIBox.MouseClick += processBox_MouseMove;
+            originalBox.MouseClick += originalBox_MouseClick;
+            processROIBox.MouseClick += processBox_MouseClick;
 
             // Crear un TabControl
             TabControl tabControl1 = new TabControl();
@@ -701,7 +702,7 @@ namespace STI
         {
 
             maxArea = 50000;
-            minArea = 15000;
+            minArea = 10000;
 
             try
             {
@@ -711,10 +712,10 @@ namespace STI
                     bool freeze = freezeFrame;
                     processing = true;
 
-                    if (!freeze)
-                    {
-                        disposeImages();
-                    }
+                    //if (!freeze)
+                    //{
+                    //    disposeImages();
+                    //}
 
                     // Crear un Stopwatch
                     Stopwatch stopwatch = new Stopwatch();
@@ -738,8 +739,6 @@ namespace STI
                             }
                             else
                             {
-                                processROIBox.Image = null;
-                                originalBox.Image = null;
                                 preProcess();
                             }
                             break;
@@ -783,13 +782,13 @@ namespace STI
             {
                 processROIBox.Image.Dispose();
                 processROIBox.Image = null;
-                //processROIBox.Refresh();
+                processROIBox.Refresh();
             }
             if (originalBox.Image != null)
             {
                 originalBox.Image.Dispose();
                 originalBox.Image = null;
-                //originalBox.Refresh();
+                originalBox.Refresh();
             }
 
             if (!originalImageIsDisposed)
@@ -1054,9 +1053,6 @@ namespace STI
 
         private void preProcess()
         {
-            processImageBtn.Enabled = true;
-
-
             string path = saveImage();
             originalImage = new Bitmap(path);
             originalImageIsDisposed = false;
@@ -1084,12 +1080,14 @@ namespace STI
             resizedImage.Save(imagesPath + "roiDraw.jpg");
             resizedImage.Dispose();
 
+            disposeImages();
+
             originalBox.SizeMode = PictureBoxSizeMode.AutoSize;
             originalBox.Visible = true;
             originalBox.LoadAsync();
 
             originalBox.BringToFront();
-            processROIBox.SendToBack();
+            //processROIBox.SendToBack();
 
             Quadrants = new List<Quadrant>();
 
@@ -1101,6 +1099,9 @@ namespace STI
                 Quadrant qua = new Quadrant(i, "", false, 0, 0, 0, 0, blb);
                 Quadrants.Add(qua);
             }
+
+            processImageBtn.Enabled = true;
+            processImageBtn.BackColor = Color.Silver;
         }
 
         private void calibrate()
@@ -1325,7 +1326,7 @@ namespace STI
             Matrix<double> distCoeffs = new Matrix<double>(1, 5); // 5 coeficientes de distorsión
 
             double k1 = -1.8568e-7;//-21.4641724 - 6;
-            double k2 = -3.4286e-13 + 4.5e-13;//1391.66319 - 700;
+            double k2 = -3.4286e-13 + 3.75e-13;//1391.66319 - 700;
             double p1 = 0;
             double p2 = 0;
             double k3 = 0;
@@ -1447,6 +1448,7 @@ namespace STI
                 //binarizedImage = binarizeImage(originalImage, 0);
                 binarizedImage = binarizeImage(originalImageCV, 0);
                 originalImageCV.Dispose();
+                originalImageCV = null;
             }
             catch
             {
@@ -1980,42 +1982,42 @@ namespace STI
             originalROIImage.Dispose();
         }
 
-        private void originalBox_MouseMove(object sender, MouseEventArgs e)
+        private void originalBox_MouseClick(object sender, MouseEventArgs e)
         {
-            // Obtener la posición del ratón dentro del PictureBox
-            Point mousePos = e.Location;
+            //// Obtener la posición del ratón dentro del PictureBox
+            //Point mousePos = e.Location;
 
-            // Obtener la imagen del PictureBox
-            Bitmap bitmap = (Bitmap)originalBox.Image;
+            //// Obtener la imagen del PictureBox
+            //Bitmap bitmap = (Bitmap)originalBox.Image;
 
-            if (bitmap != null && originalBox.ClientRectangle.Contains(mousePos))
-            {
-                // Obtener el color del píxel en la posición del ratón
-                Color pixelColor = bitmap.GetPixel(mousePos.X, mousePos.Y);
+            //if (bitmap != null && originalBox.ClientRectangle.Contains(mousePos))
+            //{
+            //    // Obtener el color del píxel en la posición del ratón
+            //    Color pixelColor = bitmap.GetPixel(mousePos.X, mousePos.Y);
 
-                // Mostrar la información del píxel
-                PixelDataValue.Text = $"  [ ax= {mousePos.X} y= {mousePos.Y}, Value: {(int)(Math.Round(pixelColor.GetBrightness(), 3) * 255)}]";
-            }
-            bitmap.Dispose();
+            //    // Mostrar la información del píxel
+            //    PixelDataValue.Text = $"  [ ax= {mousePos.X} y= {mousePos.Y}, Value: {(int)(Math.Round(pixelColor.GetBrightness(), 3) * 255)}]";
+            //}
+            //bitmap.Dispose();
         }
 
-        private void processBox_MouseMove(object sender, MouseEventArgs e)
+        private void processBox_MouseClick(object sender, MouseEventArgs e)
         {
-            // Obtener la posición del ratón dentro del PictureBox
-            Point mousePos = e.Location;
+            //// Obtener la posición del ratón dentro del PictureBox
+            //Point mousePos = e.Location;
 
-            // Obtener la imagen del PictureBox
-            Bitmap bitmap = (Bitmap)processROIBox.Image;
+            //// Obtener la imagen del PictureBox
+            //Bitmap bitmap = (Bitmap)processROIBox.Image;
 
-            if (bitmap != null && processROIBox.ClientRectangle.Contains(mousePos))
-            {
-                // Obtener el color del píxel en la posición del ratón
-                Color pixelColor = bitmap.GetPixel(mousePos.X, mousePos.Y);
+            //if (bitmap != null && processROIBox.ClientRectangle.Contains(mousePos))
+            //{
+            //    // Obtener el color del píxel en la posición del ratón
+            //    Color pixelColor = bitmap.GetPixel(mousePos.X, mousePos.Y);
 
-                // Mostrar la información del píxel
-                PixelDataValue.Text = $"  [ bx= {mousePos.X + UserROI.Left} y= {mousePos.Y + UserROI.Top}, Value: {(int)(Math.Round(pixelColor.GetBrightness(), 3) * 255)}]";
-            }
-            bitmap.Dispose();
+            //    // Mostrar la información del píxel
+            //    PixelDataValue.Text = $"  [ bx= {mousePos.X + UserROI.Left} y= {mousePos.Y + UserROI.Top}, Value: {(int)(Math.Round(pixelColor.GetBrightness(), 3) * 255)}]";
+            //}
+            //bitmap.Dispose();
         }
 
         private void updateUnits(string unitsNew)
@@ -2100,6 +2102,26 @@ namespace STI
                 if (Double.TryParse(Txt_MinDiameter.Text, out mnDiameter)) ;
                 mnDiameter *= fact;
                 Txt_MinDiameter.Text = Math.Round(mnDiameter, 3).ToString();
+
+                double controlDiameter = 0;
+                if (Double.TryParse(txtControlDiameter.Text, out controlDiameter)) ;
+                controlDiameter *= fact;
+                txtControlDiameter.Text = Math.Round(controlDiameter, 3).ToString();
+
+                double avgMinDiameter = 0;
+                if (Double.TryParse(txtAvgMinD.Text, out avgMinDiameter)) ;
+                avgMinDiameter *= fact;
+                txtAvgMinD.Text = Math.Round(avgMinDiameter, 3).ToString();
+                
+                double avgMaxDiameter = 0;
+                if (Double.TryParse(txtAvgMaxD.Text, out avgMaxDiameter)) ;
+                avgMaxDiameter *= fact;
+                txtAvgMaxD.Text = Math.Round(avgMaxDiameter, 3).ToString();
+
+                double equivalentDiameter = 0;
+                if (Double.TryParse(txtEquivalentDiameter.Text, out equivalentDiameter)) ;
+                equivalentDiameter *= fact;
+                txtEquivalentDiameter.Text = Math.Round(equivalentDiameter, 3).ToString();
             }
         }
 
@@ -2396,7 +2418,7 @@ namespace STI
                     Blob blob = new Blob((double)area, perimeter, contours[i], diameterTriangles, diametroIA, centro, maxDiameter, minDiameter, sector, compactness, size, ovalidad);
 
                     // Sumamos para promediar
-                    avgDIA += (diametroIA * tempFactor);
+                    avgDIA += (diametroIA);
                     avgMaxD += (maxDiameter * tempFactor);
                     avgMinD += (minDiameter * tempFactor);
                     avgD += (diameterTriangles * tempFactor);
@@ -2489,9 +2511,9 @@ namespace STI
             if (!double.IsNaN(avgDIA))
             {
                 double validateControl = Filtro(avgDIA);
-                if (validateControl > maxDiameter * euFactor * 3)
+                if (validateControl > maxDiameter * 3)
                 {
-                    validateControl = maxDiameter * euFactor * 3;
+                    validateControl = maxDiameter * 3;
                 }
                 else if (validateControl < 0)
                 {
@@ -2508,8 +2530,8 @@ namespace STI
             avg_diameter.Text = Math.Round(avgD, 3).ToString();
             txtAvgMaxD.Text = Math.Round(avgMaxD, 3).ToString();
             txtAvgMinD.Text = Math.Round(avgMinD, 3).ToString();
-            txtEquivalentDiameter.Text = Math.Round(avgDIA, 3).ToString();
-            txtControlDiameter.Text = Math.Round(controlDiameter, 3).ToString();
+            txtEquivalentDiameter.Text = Math.Round(avgDIA * euFactor, 3).ToString();
+            txtControlDiameter.Text = Math.Round(controlDiameter*euFactor, 3).ToString();
 
             // Asignar la DataTable al DataGridView
             dataGridView1.DataSource = dataTable;
@@ -3055,7 +3077,7 @@ namespace STI
             pictureBox.Size = new Size(imageWidth, imageHeight);
 
             // Ubicar el PictureBox en la posición del ROI
-            pictureBox.Location = new Point((int)((UserROI.Left + OffsetLeft)*0.5), (int)((UserROI.Top + OffsetTop)*0.5));
+            pictureBox.Location = new Point((int)((UserROI.Left*0.5)+OffsetLeft), (int)((UserROI.Top*0.5) + OffsetTop));
 
             // Agregar el PictureBox a la misma TabPage que m_ImageBox
             tabPage.Controls.Add(pictureBox);
@@ -3137,16 +3159,12 @@ namespace STI
 
         private void virtualTriggerBtn_Click(object sender, EventArgs e)
         {
+            originalBox.BringToFront();
+            processROIBox.SendToBack();
             processROIBox.Visible = false;
-            processImageBtn.Enabled = true;
-            processImageBtn.BackColor = Color.Silver;
 
             // Execute software trigger
             propertyMap.ExecuteCommand(ic4.PropId.TriggerSoftware);
-
-            
-
-            trigger();
 
             //bool succes = m_AcqDevice.SetFeatureValue("TriggerSoftware", true);
             //if (succes)
