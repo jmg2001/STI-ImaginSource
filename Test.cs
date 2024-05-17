@@ -1,9 +1,11 @@
 ﻿using CsvHelper;
 using EasyModbus;
+
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using Emgu.CV.Util;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,27 +22,20 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
 using ic4;
 using ic4.WinForms;
 
+using STI.Common;
 
-[StructLayout(LayoutKind.Sequential)]
-public struct RECT
-{
-    public int Left;
-    public int Top;
-    public int Right;
-    public int Bottom;
-}
+
 
 namespace STI
 {
     public partial class Test : Form
     {
-        
-
-        //// Variables globales
-        public RECT UserROI = new RECT();
+        // Variables globales
+        public Utils.RECT UserROI = new Utils.RECT();
         long[] Histogram = new long[256];
 
 
@@ -50,7 +45,9 @@ namespace STI
 
         bool freezeFrame = false;
 
-        Properties.Settings settings = new Properties.Settings();
+        //Properties.Settings settings = new Properties.Settings();
+        Settings settings = Settings.Load();
+
 
         // Datos de la lente
         double lenF = 4;
@@ -60,8 +57,6 @@ namespace STI
         // Color de la tortilla en la imagen binarizada
         int tortillaColor = 1; // 1 - Blanco, 0 - Negro
         int backgroundColor = 0;
-
-        //List<List<Point>> bgArea = new List<List<Point>>();
 
         // Variables para el Threshold
         int threshold = 140;
@@ -75,13 +70,6 @@ namespace STI
         bool triggerSoftware = false;
         int mode = 0; // 1 - Live, 0 - Frame
         int frameCounter = 0;
-
-        // Variable para actualizar las imagenes si estamos el la imagesTab
-        bool updateImages = true;
-
-        // Creamos una lista de colores (no se utilizan por ahora)
-        List<Color> colorList = new List<Color>();
-        int colorIndex = 0;
 
         // Control de recursion para el algoritmo de los triangulos
         int maxIteration = 10000;
@@ -113,12 +101,11 @@ namespace STI
         string units = "";
         bool calibrating = false;
         double euFactor = 1;
+
         // Variable para el tipo de grid de la lista gridTypes
         int grid;
 
         bool processing = false;
-
-        int indexImage = 1;
 
         // Lista para los strings de los tamaños de la tortilla
         List<string> sizes = new List<string>();
@@ -127,25 +114,20 @@ namespace STI
         public Bitmap originalImage = new Bitmap(1240, 960);
         bool originalImageIsDisposed = true;
 
-        bool roiImagesIsDisposed = false;
-
         // Directortio para guardar la imagenes para trabajar, es una carpeta tempoal
         string imagesPath = Path.GetTempPath();
 
         // Crear una lista de blobs
-        public List<Blob> Blobs = new List<Blob>();
+        public List<Utils.Blob> Blobs = new List<Utils.Blob>();
 
         // Creamos una lista de cuadrantes
-        public List<Quadrant> Quadrants = new List<Quadrant>();
+        public List<Utils.Quadrant> Quadrants = new List<Utils.Quadrant>();
 
         // Configurar el servidor Modbus TCP
         ModbusServer modbusServer = new ModbusServer();
 
-        Thread thread;
-        bool threadSuspended = false;
-
-        List<GridType> gridTypes = new List<GridType>();
-        GridType gridType = null;
+        List<Utils.GridType> gridTypes = new List<Utils.GridType>();
+        Utils.GridType gridType = null;
 
         // Iniciar el cronómetro
         Stopwatch stopwatch = new Stopwatch();
@@ -173,43 +155,87 @@ namespace STI
 
         string csvPath = "";
         string configPath = "";
+
         // Obtener el directorio de inicio del usuario actual
         string userDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
-        string archivo = "";
 
         double targetCalibrationSize = 0;
 
         Grabber grabber;
-        SnapSink sink;
         DeviceInfo deviceInfo;
         PropertyMap propertyMap;
         QueueSink queueSink;
 
         public Test()
         {
+
+
             InitializeComponent();
-            initializeElements();
+
+            LoadSettings();
+
+            InitCamera();
+
+            InitializeElements();
+
+            if (!Directory.Exists(configPath))
+            {
+                // Si no existe, crearlo
+                Directory.CreateDirectory(configPath);
+                Console.WriteLine("Directorio creado: " + configPath);
+            }
+
+            if (!Directory.Exists(imagesPath))
+            {
+                // Si no existe, crearlo
+                Directory.CreateDirectory(imagesPath);
+                Console.WriteLine("Directorio creado: " + imagesPath);
+            }
+
+            InitializeControls();
+
             InitializeDataTable();
 
-            OffsetLeft = originalBox.Location.X;
-            OffsetTop = originalBox.Location.Y;
-
             //----------------Only for Debug, delete on production-----------------
-            //MessageBox.Show(settings.frames.ToString() + " frames processed in the last execution");
             settings.frames = 0;
             settings.Save();
             //----------------Only for Debug, delete on production-----------------
+        }
 
-            initCamera();
+        private void LoadSettings()
+        {
+            // Units
+            units = settings.Units;
 
-            //// Create a SnapSink. A SnapSink allows grabbing single images (or image sequences) out of a data stream.
-            //sink = new SnapSink();
-            //// Setup data stream from the video capture device to the sink and start image acquisition.
-            //grabber.StreamSetup(sink, StreamSetupOption.AcquisitionStart);
+            //objeto ROI
+            UserROI.Top = settings.ROI_Top;
+            UserROI.Left = settings.ROI_Left;
+            UserROI.Right = settings.ROI_Right;
+            UserROI.Bottom = settings.ROI_Bottom;
 
+            // Data
+            maxOvality = settings.maxOvality;
+            maxCompactness = settings.maxCompacity;
+            maxDiameter = (float)settings.maxDiameter;
+            minDiameter = (float)settings.minDiameter;
+
+            // Format
+            grid = settings.GridType;
+
+            euFactor = settings.EUFactor;
+
+            minBlobObjects = settings.minBlobObjects;
+
+            alpha = settings.alpha;
+        }
+
+        private void InitializeControls()
+        {
             if (triggerPLC)
             {
+                processImageBtn.Enabled = false;
+
                 triggerSoftware = false;
                 txtTriggerSource.Text = "PLC";
                 txtTriggerSource.BackColor = Color.LightGreen;
@@ -224,9 +250,110 @@ namespace STI
                 processImageBtn.BackColor = Color.DarkGray;
                 processImageBtn.Text = "PROCESSING";
             }
+
+            // TEXTOS
+            // View Mode
+            if (mode == 0)
+            {
+                txtViewMode.Text = "FRAME";
+            }
+            else
+            {
+                txtViewMode.Text = "LIVE";
+            }
+
+            // Threshold
+            Txt_Threshold.Text = threshold.ToString();
+
+            // Unidades
+            maxDiameterUnitsTxt.Text = units;
+            minDiameterUnitsTxt.Text = units;
+
+            txtAvgDiameterUnits.Text = units;
+            avg_diameter.Text = "NA";
+            txtAvgMaxDiameterUnits.Text = units;
+            txtAvgMaxD.Text = "NA";
+            txtAvgMinDiameterUnits.Text = units;
+            txtAvgMinD.Text = "NA";
+            txtControlDiameterUnits.Text = units;
+            txtControlDiameter.Text = "0";
+            txtEquivalentDiameterUnits.Text = units;
+            txtEquivalentDiameter.Text = "NA";
+
+            txtMaxDProductUnits.Text = units;
+            txtMinDProductUnits.Text = units;
+
+            // ROI
+            int roiWidth = UserROI.Right - UserROI.Left;
+            txtRoiWidth.Text = roiWidth.ToString();
+
+            int roiHeight = UserROI.Bottom - UserROI.Top;
+            txtRoiHeight.Text = roiHeight.ToString();
+
+            // EU Factos
+            euFactorTxt.Text = Math.Round(euFactor, 3).ToString();
+
+            // Format
+            //formatTxt.Text = settings.Format;
+
+            // Min Blob Objects
+            txtMinBlobObjects.Text = minBlobObjects.ToString();
+
+            // Alpha
+            txtAlpha.Text = alpha.ToString();
+
+            // Grupo "Actual Targets Sizes"
+            if (units == "mm")
+            {
+                Txt_MaxDiameter.Text = Math.Round(maxDiameter * euFactor, 0).ToString();
+                Txt_MinDiameter.Text = Math.Round(minDiameter * euFactor, 0).ToString();
+            }
+            else
+            {
+                Txt_MaxDiameter.Text = Math.Round(maxDiameter * euFactor, 3).ToString();
+                Txt_MinDiameter.Text = Math.Round(minDiameter * euFactor, 3).ToString();
+            }
+            Txt_MaxCompacity.Text = maxCompactness.ToString();
+            Txt_MaxOvality.Text = maxOvality.ToString();
+
+
+
+            // COLORES
+
+            // Threshold
+            if (autoThreshold)
+            {
+                btnAutoThreshold.BackColor = Color.LightGreen;
+                btnManualThreshold.BackColor = Color.Silver;
+            }
+            else
+            {
+                btnAutoThreshold.BackColor = Color.Silver;
+                btnManualThreshold.BackColor = Color.LightGreen;
+            }
+
+            // Trigger Source y View Mode
+            txtTriggerSource.BackColor = Color.LightGreen;
+            txtViewMode.BackColor = Color.Khaki;
+
+            // Unidades
+            switch (units)
+            {
+                case "mm":
+                    btnChangeUnitsMm.BackColor = Color.LightGreen;
+                    btnChangeUnitsInch.BackColor = Color.Silver;
+                    break;
+                case "inch":
+                    btnChangeUnitsMm.BackColor = Color.Silver;
+                    btnChangeUnitsInch.BackColor = Color.LightGreen;
+                    break;
+            }
+
+            // Set Point Source
+            btnSetPointPLC.BackColor = Color.LightGreen;
         }
 
-        private void initCamera()
+        private void InitCamera()
         {
             Library.Init();
 
@@ -273,7 +400,7 @@ namespace STI
             }
 
             // Create a QueueSink to capture all images arriving from the video capture device, specifyin a partial file name
-            string path_base = imagesPath + "imagenOrigen.bmp";
+            string path_base = userDir + "\\STI-IS-images\\imagenOrigen.bmp";
 
             queueSink = new ic4.QueueSink(maxOutputBuffers:1);
 
@@ -333,106 +460,101 @@ namespace STI
 
         }
 
-        static void PrintDeviceList()
+        
+
+        private void InitializeElements()
         {
-            Console.WriteLine("Enumerating all attached video capture devices...");
+            // Paths
+            configPath = userDir + "\\STI-IS-config";
+            csvPath = configPath + "\\STI-IS-db.csv";
+            imagesPath = userDir + "\\STI-IS-images\\";
 
-            var deviceList = DeviceEnum.Devices;
+            OffsetLeft = originalBox.Location.X;
+            OffsetTop = originalBox.Location.Y;
 
-            if (deviceList.Count == 0)
-            {
-                Console.WriteLine("No devices found");
-            }
-
-            Console.WriteLine($"Found {deviceList.Count} devices:");
-
-            foreach (var deviceInfo in deviceList)
-            {
-                Console.WriteLine($"\t{FormatDeviceInfo(deviceInfo)}");
-            }
-
-            Console.WriteLine();
-        }
-
-        static string FormatDeviceInfo(ic4.DeviceInfo deviceInfo)
-        {
-            return $"Model: {deviceInfo.ModelName} Serial: {deviceInfo.Serial}";
-        }
-
-        private void initializeElements()
-        {
-            //imagesPath = userDir + "\\";
-
+            // Comment for init without sign in
             configurationPage.Enabled = true;
             advancedPage.Enabled = true;
 
-            string actualDIrectory = AppDomain.CurrentDomain.BaseDirectory;
-            csvPath = userDir + "\\InspecTorT_db.csv";
-            configPath = userDir + "\\InspecTorTConfig";
-            archivo = userDir + "\\datos.txt";
-
-            //originalBox.MouseMove += originalBox_MouseMove;
-            //processROIBox.MouseMove += processBox_MouseMove;
-
-            //CmbOperationModeSelection.Text = "PLC";
-            btnSetPointPLC.BackColor = Color.LightGreen;
-
-            operationMode = 2;
+            operationMode = 2; // PLC
             productsPage.Enabled = false;
             GroupActualTargetSize.Enabled = false;
             GroupSelectGrid.Enabled = false;
 
-            // Suscribir al evento SelectedIndexChanged del TabControl
-            mainTabs.SelectedIndexChanged += TabControl2_SelectedIndexChanged;
+            // Suscribir a los eventos
+            mainTabs.SelectedIndexChanged += mainTabs_SelectedIndexChanged;
+            CmbProducts.SelectedIndexChanged += CmbProducts_SelectedIndexChanged;
+            
+            Txt_MaxCompacity.KeyPress += Txt_MaxCompacity_KeyPress;
+            Txt_MaxOvality.KeyPress += Txt_MaxOvality_KeyPress;
 
-            processImageBtn.Enabled = false;
+            originalBox.MouseClick += originalBox_MouseClick;
+            processROIBox.MouseClick += processBox_MouseClick;
+            
+            // Iniciar el csv de los productos
+            InitCsv();
 
-            units = settings.Units;
-            maxDiameterUnitsTxt.Text = units;
-            minDiameterUnitsTxt.Text = units;
+            // Iniciar servidor ModBus
+            modbusServer.Port = 502;
+            modbusServer.Listen();
+            Console.WriteLine("Modbus Server running...1");
 
-            txtAvgDiameterUnits.Text = units;
-            txtAvgMaxDiameterUnits.Text = units;
-            txtAvgMinDiameterUnits.Text = units;
-            txtControlDiameterUnits.Text = units;
-            txtEquivalentDiameterUnits.Text = units;
+            // Aquí vamos a agregar todos los formatos
+            // 3x3
+            int[] quadrantsOfinterest = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            gridTypes.Add(new Utils.GridType(1, (3, 3), quadrantsOfinterest));
+            // 5
+            quadrantsOfinterest = new int[] { 1, 3, 5, 7, 9 };
+            gridTypes.Add(new Utils.GridType(2, (3, 3), quadrantsOfinterest));
+            // 4x4
+            quadrantsOfinterest = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
+            gridTypes.Add(new Utils.GridType(3, (4, 4), quadrantsOfinterest));
+            // 2x2
+            quadrantsOfinterest = new int[] { 1, 2, 3, 4 };
+            gridTypes.Add(new Utils.GridType(4, (2, 2), quadrantsOfinterest));
 
-            txtMaxDProductUnits.Text = units;
-            txtMinDProductUnits.Text = units;
-
-            txtTriggerSource.BackColor = Color.LightGreen;
-            txtViewMode.BackColor = Color.Khaki;
-
-            switch (units)
+            // Cargamos el GridType inicial
+            foreach (Utils.GridType gridT in gridTypes)
             {
-                case "mm":
-                    btnChangeUnitsMm.BackColor = Color.LightGreen;
-                    btnChangeUnitsInch.BackColor = Color.Silver;
-                    break;
-                case "inch":
-                    btnChangeUnitsMm.BackColor = Color.Silver;
-                    btnChangeUnitsInch.BackColor = Color.LightGreen;
-                    break;
+                if (gridT.Type == grid)
+                {
+                    gridType = gridT;
+                }
             }
 
-            euFactor = settings.EUFactor;
-            euFactorTxt.Text = Math.Round(euFactor, 3).ToString();
+            // Iniciar la lista de los tamaños
+            sizes.Add("Null");
+            sizes.Add("Normal");
+            sizes.Add("Big");
+            sizes.Add("Small");
+            sizes.Add("Oval");
+            sizes.Add("Oversize");
+            sizes.Add("Shape");
 
-            formatTxt.Text = settings.Format;
+            processROIBox.Image = null;
+            originalBox.Image = null;
 
-            minBlobObjects = settings.minBlobObjects;
-            txtMinBlobObjects.Text = minBlobObjects.ToString();
 
-            alpha = settings.alpha;
-            txtAlpha.Text = alpha.ToString();
+            // Crear un TabControl
+            //TabControl tabControl1 = new TabControl();
+            //tabControl1.Location = new Point(10, 10);
+            //tabControl1.Size = new Size(680, 520);
+            //this.Controls.Add(tabControl1);
 
+            // Paths para cargar asincronicamente las imagenes de los PictureBox
+            originalBox.ImageLocation = imagesPath + "roiDraw.jpg";
+            processROIBox.ImageLocation = imagesPath + "final.jpg";
+        }
+
+        private void InitCsv()
+        {
             // Verificar si el archivo existe
             if (File.Exists(csvPath))
             {
                 using (var reader = new StreamReader(new FileStream(csvPath, FileMode.Open), System.Text.Encoding.UTF8))
                 using (var csvReader = new CsvReader(reader, CultureInfo.CurrentCulture))
                 {
-                    var records = csvReader.GetRecords<Product>();
+                    var records = csvReader.GetRecords<Utils.Product>();
                     foreach (var record in records)
                     {
                         CmbProducts.Items.Add(record.Code);
@@ -457,7 +579,7 @@ namespace STI
                 using (var reader = new StreamReader(new FileStream(csvPath, FileMode.Open), System.Text.Encoding.UTF8))
                 using (var csvReader = new CsvReader(reader, CultureInfo.CurrentCulture))
                 {
-                    var records = csvReader.GetRecords<Product>();
+                    var records = csvReader.GetRecords<Utils.Product>();
                     foreach (var record in records)
                     {
                         CmbProducts.Items.Add(record.Code);
@@ -465,98 +587,6 @@ namespace STI
                     }
                 }
             }
-
-            // Suscribirse al evento SelectedIndexChanged del ComboBox
-            CmbProducts.SelectedIndexChanged += CmbProducts_SelectedIndexChanged;
-
-            modbusServer.Port = 502;
-            modbusServer.Listen();
-            Console.WriteLine("Modbus Server running...1");
-
-            // Aquí vamos a agregar todos los formatos
-            // 3x3
-            int[] quadrantsOfinterest = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            gridTypes.Add(new GridType(1, (3, 3), quadrantsOfinterest));
-            // 5
-            quadrantsOfinterest = new int[] { 1, 3, 5, 7, 9 };
-            gridTypes.Add(new GridType(2, (3, 3), quadrantsOfinterest));
-            // 4x4
-            quadrantsOfinterest = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
-            gridTypes.Add(new GridType(3, (4, 4), quadrantsOfinterest));
-            // 2x2
-            quadrantsOfinterest = new int[] { 1, 2, 3, 4 };
-            gridTypes.Add(new GridType(4, (2, 2), quadrantsOfinterest));
-
-            grid = settings.GridType;
-
-            // Cargamos el GridType inicial
-            foreach (GridType gridT in gridTypes)
-            {
-                if (gridT.Type == grid)
-                {
-                    gridType = gridT;
-                }
-            }
-
-            sizes.Add("Null");
-            sizes.Add("Normal");
-            sizes.Add("Big");
-            sizes.Add("Small");
-            sizes.Add("Oval");
-            sizes.Add("Oversize");
-            sizes.Add("Shape");
-
-            //objeto ROI
-            UserROI.Top = settings.ROI_Top;
-            UserROI.Left = settings.ROI_Left;
-            UserROI.Right = settings.ROI_Right;
-            UserROI.Bottom = settings.ROI_Bottom;
-
-            int roiWidth = UserROI.Right - UserROI.Left;
-            txtRoiWidth.Text = roiWidth.ToString();
-
-            int roiHeight = UserROI.Bottom - UserROI.Top;
-            txtRoiHeight.Text = roiHeight.ToString();
-
-            processROIBox.Image = null;
-            originalBox.Image = null;
-
-            maxOvality = settings.maxOvality;
-            maxCompactness = settings.maxCompacity;
-            maxDiameter = (float)settings.maxDiameter;
-            minDiameter = (float)settings.minDiameter;
-
-            Txt_MaxDiameter.Text = Math.Round(maxDiameter * euFactor, 3).ToString();
-            Txt_MinDiameter.Text = Math.Round(minDiameter * euFactor, 3).ToString();
-            Txt_MaxCompacity.Text = maxCompactness.ToString();
-            Txt_MaxOvality.Text = maxOvality.ToString();
-
-            //InitializeInterface();
-            Txt_MaxCompacity.KeyPress += Txt_MaxCompacity_KeyPress;
-            Txt_MaxOvality.KeyPress += Txt_MaxOvality_KeyPress;
-
-            originalBox.MouseClick += originalBox_MouseClick;
-            processROIBox.MouseClick += processBox_MouseClick;
-
-            // Crear un TabControl
-            TabControl tabControl1 = new TabControl();
-            tabControl1.Location = new Point(10, 10);
-            tabControl1.Size = new Size(680, 520);
-            this.Controls.Add(tabControl1);
-
-            if (autoThreshold)
-            {
-                btnAutoThreshold.BackColor = Color.LightGreen;
-                btnManualThreshold.BackColor = Color.Silver;
-            }
-            else
-            {
-                btnAutoThreshold.BackColor = Color.Silver;
-                btnManualThreshold.BackColor = Color.LightGreen;
-            }
-
-            originalBox.ImageLocation = imagesPath + "roiDraw.jpg";
-            processROIBox.ImageLocation = imagesPath + "final.jpg";
         }
 
         private void InitializeDataTable()
@@ -592,109 +622,6 @@ namespace STI
                     break;
             }
             propertyMap.SetValue(ic4.PropId.TriggerSource, param);
-        }
-
-        private void ModbusServerIPTxt_KeyPress(object sender, KeyPressEventArgs e)
-        {
-
-        }
-
-        // Clase de los productos
-        public class Product
-        {
-            public int Id { get; set; }
-            public int Code { get; set; }
-            public string Name { get; set; }
-            public double MaxD { get; set; }
-            public double MinD { get; set; }
-            public double MaxOvality { get; set; }
-            public double MaxCompacity { get; set; }
-            public int Grid { get; set; }
-
-        }
-
-
-        // Clase para representar el grid
-        public class GridType
-        {
-            public int Type { get; set; }
-            public (int, int) Grid { get; set; }
-            public int[] QuadrantsOfInterest { get; set; }
-
-            public GridType(int type, (int, int) grid, int[] quadrantsOfInterest)
-            {
-                Type = type;
-                Grid = grid;
-                QuadrantsOfInterest = quadrantsOfInterest;
-            }
-
-        }
-
-        public class Blob
-        {
-            // Propiedades de la estructura Blob
-            public double Area { get; set; }
-            //public List<Point> AreaPoints { get; set; }
-            public double Perimetro { get; set; }
-            public VectorOfPoint PerimetroPoints { get; set; }
-            public double DiametroIA { get; set; }
-            public double Diametro { get; set; }
-            public Point Centro { get; set; }
-            public double DMayor { get; set; }
-            public double DMenor { get; set; }
-            public double Sector { get; set; }
-            public double Compacidad { get; set; }
-            public double Ovalidad { get; set; }
-            public ushort Size { get; set; }
-            //public double CorrectionFactor { get; set; }
-
-            // Constructor de la clase Blob
-            public Blob(double area, double perimetro, VectorOfPoint perimetroPoints, double diametro, double diametroIA, Point centro, double dMayor, double dMenor, double sector, double compacidad, ushort size, double ovalidad)
-            {
-                Area = area;
-                //AreaPoints = areaPoints;
-                Perimetro = perimetro;
-                PerimetroPoints = perimetroPoints;
-                Diametro = diametro;
-                DiametroIA = diametroIA;
-                Centro = centro;
-                DMayor = dMayor;
-                DMenor = dMenor;
-                Sector = sector;
-                Compacidad = compacidad;
-                Size = size;
-                Ovalidad = ovalidad;
-                //CorrectionFactor = correctionFactor;
-            }
-        }
-
-        // Clase para representar un cuadrante L_Q1
-        public class Quadrant
-        {
-            public int Number { get; set; }
-            public string ClassName { get; set; }
-            public bool Found { get; set; }
-            public double DiameterAvg { get; set; }
-            public double DiameterMax { get; set; }
-            public double DiameterMin { get; set; }
-            public double Ratio { get; set; }
-            public double Compacity { get; set; }
-
-            public Blob Blob { get; set; }
-
-            public Quadrant(int number, string className, bool found, double diameterAvg, double diameterMax, double diameterMin, double compacity, Blob blob)
-            {
-                // Inicializar las propiedades según sea necesario
-                Number = number;
-                ClassName = className;
-                Found = found;
-                DiameterAvg = diameterAvg;
-                DiameterMax = diameterMax;
-                DiameterMin = diameterMin;
-                Ratio = diameterMax / diameterMin;
-                Compacity = compacity;
-                Blob = Blob;
-            }
         }
 
         private void trigger()
@@ -866,7 +793,7 @@ namespace STI
 
         private void blobProcessFreezed(Mat image, PictureBox pictureBox)
         {
-            Blobs = new List<Blob>();
+            Blobs = new List<Utils.Blob>();
 
             var (contours, centers, areas, perimeters) = FindContoursWithEdgesAndCenters(image);
 
@@ -921,12 +848,12 @@ namespace STI
 
                     ushort size = calculateSize(maxDiameter, minDiameter, compactness, ovalidad);
 
-                    Blob blob = new Blob(area, perimeter, contours[i], diameterTriangles, diametroIA, centro, maxDiameter, minDiameter, sector, compactness, size, ovalidad);
+                    Utils.Blob blob = new Utils.Blob(area, perimeter, contours[i], diameterTriangles, diametroIA, centro, maxDiameter, minDiameter, sector, compactness, size, ovalidad);
 
                     // Agregamos el elemento a la lista
                     Blobs.Add(blob);
 
-                    foreach (Quadrant quadrant in Quadrants)
+                    foreach (Utils.Quadrant quadrant in Quadrants)
                     {
                         if (quadrant.Number == sector)
                         {
@@ -999,14 +926,14 @@ namespace STI
 
             originalImageCV.Save(imagesPath + "updatedROI.jpg");
 
-            Quadrants = new List<Quadrant>();
+            Quadrants = new List<Utils.Quadrant>();
 
             for (int i = 1; i < 17; i++)
             {
                 VectorOfPoint points = new VectorOfPoint();
                 Point centro = new Point();
-                Blob blb = new Blob(0, 0, points, 0, 0, centro, 0, 0, 0, 0, 0, 0);
-                Quadrant qua = new Quadrant(i, "", false, 0, 0, 0, 0, blb);
+                Utils.Blob blb = new Utils.Blob(0, 0, points, 0, 0, centro, 0, 0, 0, 0, 0, 0);
+                Utils.Quadrant qua = new Utils.Quadrant(i, "", false, 0, 0, 0, 0, blb);
                 Quadrants.Add(qua);
             }
         }
@@ -1107,14 +1034,14 @@ namespace STI
             originalBox.BringToFront();
             //processROIBox.SendToBack();
 
-            Quadrants = new List<Quadrant>();
+            Quadrants = new List<Utils.Quadrant>();
 
             for (int i = 1; i < 17; i++)
             {
                 VectorOfPoint points = new VectorOfPoint();
                 Point centro = new Point();
-                Blob blb = new Blob(0, 0, points, 0, 0, centro, 0, 0, 0, 0, 0, 0);
-                Quadrant qua = new Quadrant(i, "", false, 0, 0, 0, 0, blb);
+                Utils.Blob blb = new Utils.Blob(0, 0, points, 0, 0, centro, 0, 0, 0, 0, 0, 0);
+                Utils.Quadrant qua = new Utils.Quadrant(i, "", false, 0, 0, 0, 0, blb);
                 Quadrants.Add(qua);
             }
 
@@ -1128,6 +1055,24 @@ namespace STI
             updateGridType(1);
 
             Mat binarizedImage = new Mat();
+
+            try
+            {
+                CvInvoke.GaussianBlur(originalImageCV, originalImageCV, new Size(15, 15), 1.5);
+
+                //CvInvoke.Imshow("Blur", originalImageCV);
+
+                CvInvoke.CvtColor(originalImageCV, originalImageCV, ColorConversion.Bgr2Gray);
+
+                CvInvoke.EqualizeHist(originalImageCV, originalImageCV);
+
+                CvInvoke.CvtColor(originalImageCV, originalImageCV, ColorConversion.Gray2Bgr);
+                //CvInvoke.Imshow("Blur + Equalize", originalImageCV);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
 
             // Se binariza la imagen
             try
@@ -1194,7 +1139,7 @@ namespace STI
 
             if (calibrationValidate)
             {
-                double tempFactor = targetCalibrationSize / diametroIA; // unit/pixels
+                double tempFactor = (targetCalibrationSize) / diametroIA; // unit/pixels
                                                                         // Mostrar un MessageBox con un mensaje y botones de opción
                 DialogResult result = MessageBox.Show($"A factor of {tempFactor} was obtained. Do you want to continue?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
 
@@ -1621,7 +1566,7 @@ namespace STI
 
                 int offset = 14;
                 int firtsRegister = 0;
-                foreach (Quadrant q in Quadrants)
+                foreach (Utils.Quadrant q in Quadrants)
                 {
                     firtsRegister = offset * q.Number + 11;
                     if (gridType.QuadrantsOfInterest.Contains(q.Number))
@@ -1927,7 +1872,7 @@ namespace STI
             }
         }
 
-        private void changeProduct(Product record)
+        private void changeProduct(Utils.Product record)
         {
             settings.productCode = record.Code;
             CmbProducts.SelectedItem = record.Code;
@@ -1963,7 +1908,7 @@ namespace STI
             using (var reader = new StreamReader(new FileStream(csvPath, FileMode.Open), System.Text.Encoding.UTF8))
             using (var csvReader = new CsvReader(reader, CultureInfo.CurrentCulture))
             {
-                var records = csvReader.GetRecords<Product>();
+                var records = csvReader.GetRecords<Utils.Product>();
                 //records.Add(new Product { Code = 1, MaxD = 130, MinD = 110, MaxOvality = 0.5, MaxCompacity = 12 });
                 //csvWriter.WriteRecords(records);
                 foreach (var record in records)
@@ -2082,7 +2027,7 @@ namespace STI
                 if (dataTable.Rows.Count > 0)
                 {
                     dataTable.Clear();
-                    foreach (Blob blob in Blobs)
+                    foreach (Utils.Blob blob in Blobs)
                     {
                         dataTable.Rows.Add(blob.Sector, blob.Area, Math.Round(blob.DiametroIA * euFactor, 3), Math.Round(blob.Diametro * euFactor, 3), Math.Round(blob.DMayor * euFactor, 3), Math.Round(blob.DMenor * euFactor, 3), Math.Round(blob.Compacidad, 3), Math.Round(blob.Ovalidad, 3));
                     }
@@ -2177,9 +2122,6 @@ namespace STI
                     equivalentDiameter *= fact;
                     txtEquivalentDiameter.Text = Math.Round(equivalentDiameter, 0).ToString();
                 }
-
-
-                
             }
         }
 
@@ -2267,11 +2209,11 @@ namespace STI
 
         [HandleProcessCorruptedStateExceptions]
         [SecurityCritical]
-        private void TabControl2_SelectedIndexChanged(object sender, EventArgs e)
+        private void mainTabs_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (mainTabs.SelectedTab != imagePage)
             {
-                updateImages = false;
+
             }
             else
             {
@@ -2322,7 +2264,7 @@ namespace STI
                 //    }
                 //}
 
-                updateImages = true;
+
             }
         }
 
@@ -2402,15 +2344,10 @@ namespace STI
 
         private void blobProces(Mat image, PictureBox pictureBox)
         {
-            Blobs = new List<Blob>();
+            Blobs = new List<Utils.Blob>();
 
             // Configurar el PictureBox para ajustar automáticamente al tamaño de la imagen
             pictureBox.SizeMode = PictureBoxSizeMode.AutoSize;
-
-            // Mostrar la imagen en el PictureBox
-            //pictureBox.Image = image.ToBitmap();
-
-            image.Save(imagesPath + "roi.bmp");
 
             var (contours, centers, areas, perimeters) = FindContoursWithEdgesAndCenters(image);
 
@@ -2473,7 +2410,7 @@ namespace STI
                     // Agregamos los datos a la tabla
                     dataTable.Rows.Add(sector, area, Math.Round(diametroIA * tempFactor, 3), Math.Round(diameterTriangles * tempFactor, 3), Math.Round(maxDiameter * tempFactor, 3), Math.Round(minDiameter * tempFactor, 3), Math.Round(compactness, 3), Math.Round(ovalidad, 3));
 
-                    Blob blob = new Blob((double)area, perimeter, contours[i], diameterTriangles, diametroIA, centro, maxDiameter, minDiameter, sector, compactness, size, ovalidad);
+                    Utils.Blob blob = new Utils.Blob((double)area, perimeter, contours[i], diameterTriangles, diametroIA, centro, maxDiameter, minDiameter, sector, compactness, size, ovalidad);
 
                     // Sumamos para promediar
                     avgDIA += (diametroIA);
@@ -2486,7 +2423,7 @@ namespace STI
                     // Agregamos el elemento a la lista
                     Blobs.Add(blob);
 
-                    foreach (Quadrant quadrant in Quadrants)
+                    foreach (Utils.Quadrant quadrant in Quadrants)
                     {
                         if (quadrant.Number == sector)
                         {
@@ -3157,7 +3094,7 @@ namespace STI
 
         private void updateGridType(int v, string type = "")
         {
-            foreach (GridType gridT in gridTypes)
+            foreach (Utils.GridType gridT in gridTypes)
             {
                 if (gridT.Type == v && grid != v)
                 {
@@ -3384,7 +3321,7 @@ namespace STI
             using (var reader = new StreamReader(new FileStream(csvPath, FileMode.Open), System.Text.Encoding.UTF8))
             using (var csvReader = new CsvReader(reader, CultureInfo.CurrentCulture))
             {
-                var records = csvReader.GetRecords<Product>();
+                var records = csvReader.GetRecords<Utils.Product>();
                 CmbProducts.Items.Clear();
                 //records.Add(new Product { Code = 1, MaxD = 130, MinD = 110, MaxOvality = 0.5, MaxCompacity = 12 });
                 //csvWriter.WriteRecords(records);
@@ -3398,12 +3335,12 @@ namespace STI
 
         private void updateProdut(int selectedItem)
         {
-            var records = new List<Product>();
+            var records = new List<Utils.Product>();
 
             using (var reader = new StreamReader(new FileStream(csvPath, FileMode.Open), System.Text.Encoding.UTF8))
             using (var csvReader = new CsvReader(reader, CultureInfo.CurrentCulture))
             {
-                records = csvReader.GetRecords<Product>().ToList();
+                records = csvReader.GetRecords<Utils.Product>().ToList();
                 //records.Add(new Product { Code = 1, MaxD = 130, MinD = 110, MaxOvality = 0.5, MaxCompacity = 12 });
                 //csvWriter.WriteRecords(records);
                 for (int i = 0; i < records.Count(); i++)
@@ -3428,7 +3365,7 @@ namespace STI
                                 break;
                         }
 
-                        records[i] = new Product
+                        records[i] = new Utils.Product
                         {
                             Id = i + 1,
                             Code = int.Parse(Txt_Code.Text),
@@ -3461,10 +3398,10 @@ namespace STI
 
         private void changeProductSetPoint()
         {
-            Txt_MaxDiameter.Text = Txt_MaxD.Text;
+            Txt_MaxDiameter.Text = Math.Round(double.Parse(Txt_MaxD.Text),3).ToString();
             maxDiameter = double.Parse(Txt_MaxD.Text) / euFactor;
 
-            Txt_MinDiameter.Text = Txt_MinD.Text;
+            Txt_MinDiameter.Text = Math.Round(double.Parse(Txt_MinD.Text), 3).ToString();
             minDiameter = double.Parse(Txt_MinD.Text) / euFactor;
 
             Txt_MaxOvality.Text = Txt_Ovality.Text;
@@ -3504,12 +3441,12 @@ namespace STI
 
         private void CmdAdd_Click(object sender, EventArgs e)
         {
-            var records = new List<Product>();
+            var records = new List<Utils.Product>();
 
             using (var reader = new StreamReader(new FileStream(csvPath, FileMode.Open), System.Text.Encoding.UTF8))
             using (var csvReader = new CsvReader(reader, CultureInfo.CurrentCulture))
             {
-                records = csvReader.GetRecords<Product>().ToList();
+                records = csvReader.GetRecords<Utils.Product>().ToList();
                 List<int> ids = new List<int>();
                 List<int> codes = new List<int>();
 
@@ -3539,7 +3476,7 @@ namespace STI
                             break;
                     }
 
-                    records.Add(new Product
+                    records.Add(new Utils.Product
                     {
                         Id = ids.Count + 1,
                         Code = int.Parse(Txt_Code.Text),
@@ -3566,7 +3503,7 @@ namespace STI
             using (var csvReader = new CsvReader(reader, CultureInfo.CurrentCulture))
             {
                 CmbProducts.Items.Clear();
-                var records2 = csvReader.GetRecords<Product>();
+                var records2 = csvReader.GetRecords<Utils.Product>();
                 foreach (var record in records2)
                 {
                     CmbProducts.Items.Add(record.Code);

@@ -147,6 +147,7 @@
     <Compile Include="Common\InputDlg2.designer.cs">
       <DependentUpon>InputDlg2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Common\Utils.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -155,6 +156,7 @@
     </Compile>
     <Compile Include="Run.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="Test.cs">
       <SubType>Form</SubType>
     </Compile>

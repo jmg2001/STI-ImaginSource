@@ -29,12 +29,14 @@ using System.Runtime.ExceptionServices;
 using System.Security;
 
 
+using STI.Common;
+
 namespace STI
 {
     public partial class Main : Form
     {
         //// Variables globales
-        public RECT UserROI = new RECT();
+        public Utils.RECT UserROI = new Utils.RECT();
         long[] Histogram = new long[256];
 
 

@@ -748,9 +748,9 @@
             this.txtEquivalentDiameterUnits.Font = new System.Drawing.Font("Alef", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtEquivalentDiameterUnits.Location = new System.Drawing.Point(92, 19);
             this.txtEquivalentDiameterUnits.Name = "txtEquivalentDiameterUnits";
-            this.txtEquivalentDiameterUnits.Size = new System.Drawing.Size(36, 22);
+            this.txtEquivalentDiameterUnits.Size = new System.Drawing.Size(224, 22);
             this.txtEquivalentDiameterUnits.TabIndex = 126;
-            this.txtEquivalentDiameterUnits.Text = "mm";
+            this.txtEquivalentDiameterUnits.Text = "@txtEquivalentDiameterUnits";
             // 
             // txtEquivalentDiameter
             // 
@@ -758,9 +758,9 @@
             this.txtEquivalentDiameter.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtEquivalentDiameter.Location = new System.Drawing.Point(6, 16);
             this.txtEquivalentDiameter.Name = "txtEquivalentDiameter";
-            this.txtEquivalentDiameter.Size = new System.Drawing.Size(24, 25);
+            this.txtEquivalentDiameter.Size = new System.Drawing.Size(243, 25);
             this.txtEquivalentDiameter.TabIndex = 0;
-            this.txtEquivalentDiameter.Text = "0";
+            this.txtEquivalentDiameter.Text = "@txtEquivalentDiameter";
             // 
             // groupBox5
             // 
@@ -801,9 +801,9 @@
             this.txtAvgMinDiameterUnits.Font = new System.Drawing.Font("Alef", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtAvgMinDiameterUnits.Location = new System.Drawing.Point(223, 85);
             this.txtAvgMinDiameterUnits.Name = "txtAvgMinDiameterUnits";
-            this.txtAvgMinDiameterUnits.Size = new System.Drawing.Size(36, 22);
+            this.txtAvgMinDiameterUnits.Size = new System.Drawing.Size(205, 22);
             this.txtAvgMinDiameterUnits.TabIndex = 125;
-            this.txtAvgMinDiameterUnits.Text = "mm";
+            this.txtAvgMinDiameterUnits.Text = "@txtAvgMinDiameterUnits";
             // 
             // txtAvgMaxDiameterUnits
             // 
@@ -811,9 +811,9 @@
             this.txtAvgMaxDiameterUnits.Font = new System.Drawing.Font("Alef", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtAvgMaxDiameterUnits.Location = new System.Drawing.Point(223, 56);
             this.txtAvgMaxDiameterUnits.Name = "txtAvgMaxDiameterUnits";
-            this.txtAvgMaxDiameterUnits.Size = new System.Drawing.Size(36, 22);
+            this.txtAvgMaxDiameterUnits.Size = new System.Drawing.Size(210, 22);
             this.txtAvgMaxDiameterUnits.TabIndex = 124;
-            this.txtAvgMaxDiameterUnits.Text = "mm";
+            this.txtAvgMaxDiameterUnits.Text = "@txtAvgMaxDiameterUnits";
             // 
             // txtAvgDiameterUnits
             // 
@@ -821,9 +821,9 @@
             this.txtAvgDiameterUnits.Font = new System.Drawing.Font("Alef", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtAvgDiameterUnits.Location = new System.Drawing.Point(223, 30);
             this.txtAvgDiameterUnits.Name = "txtAvgDiameterUnits";
-            this.txtAvgDiameterUnits.Size = new System.Drawing.Size(36, 22);
+            this.txtAvgDiameterUnits.Size = new System.Drawing.Size(178, 22);
             this.txtAvgDiameterUnits.TabIndex = 123;
-            this.txtAvgDiameterUnits.Text = "mm";
+            this.txtAvgDiameterUnits.Text = "@txtAvgDiameterUnits";
             // 
             // avg_diameter
             // 
@@ -831,9 +831,9 @@
             this.avg_diameter.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.avg_diameter.Location = new System.Drawing.Point(149, 31);
             this.avg_diameter.Name = "avg_diameter";
-            this.avg_diameter.Size = new System.Drawing.Size(18, 20);
+            this.avg_diameter.Size = new System.Drawing.Size(121, 20);
             this.avg_diameter.TabIndex = 0;
-            this.avg_diameter.Text = "0";
+            this.avg_diameter.Text = "@avg_diameter";
             // 
             // label13
             // 
@@ -851,9 +851,9 @@
             this.txtAvgMinD.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtAvgMinD.Location = new System.Drawing.Point(149, 85);
             this.txtAvgMinD.Name = "txtAvgMinD";
-            this.txtAvgMinD.Size = new System.Drawing.Size(18, 20);
+            this.txtAvgMinD.Size = new System.Drawing.Size(106, 20);
             this.txtAvgMinD.TabIndex = 0;
-            this.txtAvgMinD.Text = "0";
+            this.txtAvgMinD.Text = "@txtAvgMinD";
             // 
             // label11
             // 
@@ -871,9 +871,9 @@
             this.txtAvgMaxD.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtAvgMaxD.Location = new System.Drawing.Point(149, 57);
             this.txtAvgMaxD.Name = "txtAvgMaxD";
-            this.txtAvgMaxD.Size = new System.Drawing.Size(18, 20);
+            this.txtAvgMaxD.Size = new System.Drawing.Size(110, 20);
             this.txtAvgMaxD.TabIndex = 0;
-            this.txtAvgMaxD.Text = "0";
+            this.txtAvgMaxD.Text = "@txtAvgMaxD";
             // 
             // label12
             // 
@@ -902,9 +902,9 @@
             this.txtControlDiameterUnits.Font = new System.Drawing.Font("Alef", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtControlDiameterUnits.Location = new System.Drawing.Point(92, 19);
             this.txtControlDiameterUnits.Name = "txtControlDiameterUnits";
-            this.txtControlDiameterUnits.Size = new System.Drawing.Size(36, 22);
+            this.txtControlDiameterUnits.Size = new System.Drawing.Size(195, 22);
             this.txtControlDiameterUnits.TabIndex = 126;
-            this.txtControlDiameterUnits.Text = "mm";
+            this.txtControlDiameterUnits.Text = "@txtControlDiamterUnits";
             // 
             // txtControlDiameter
             // 
@@ -912,9 +912,9 @@
             this.txtControlDiameter.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtControlDiameter.Location = new System.Drawing.Point(6, 16);
             this.txtControlDiameter.Name = "txtControlDiameter";
-            this.txtControlDiameter.Size = new System.Drawing.Size(24, 25);
+            this.txtControlDiameter.Size = new System.Drawing.Size(211, 25);
             this.txtControlDiameter.TabIndex = 0;
-            this.txtControlDiameter.Text = "0";
+            this.txtControlDiameter.Text = "@txtControlDiameter";
             // 
             // GroupSelectGrid
             // 
@@ -1029,9 +1029,9 @@
             this.txtTriggerSource.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtTriggerSource.Location = new System.Drawing.Point(117, 83);
             this.txtTriggerSource.Name = "txtTriggerSource";
-            this.txtTriggerSource.Size = new System.Drawing.Size(94, 18);
+            this.txtTriggerSource.Size = new System.Drawing.Size(139, 18);
             this.txtTriggerSource.TabIndex = 125;
-            this.txtTriggerSource.Text = "SOFTWARE";
+            this.txtTriggerSource.Text = "@txtTriggerSource";
             // 
             // txtViewMode
             // 
@@ -1040,9 +1040,9 @@
             this.txtViewMode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtViewMode.Location = new System.Drawing.Point(24, 83);
             this.txtViewMode.Name = "txtViewMode";
-            this.txtViewMode.Size = new System.Drawing.Size(61, 18);
+            this.txtViewMode.Size = new System.Drawing.Size(111, 18);
             this.txtViewMode.TabIndex = 124;
-            this.txtViewMode.Text = "FRAME";
+            this.txtViewMode.Text = "@txtViewMode";
             // 
             // virtualTriggerBtn
             // 
@@ -1142,8 +1142,6 @@
             // 
             // GroupActualTargetSize
             // 
-            this.GroupActualTargetSize.Controls.Add(this.minDiameterUnitsTxt);
-            this.GroupActualTargetSize.Controls.Add(this.maxDiameterUnitsTxt);
             this.GroupActualTargetSize.Controls.Add(this.Txt_MaxCompacity);
             this.GroupActualTargetSize.Controls.Add(this.Label50);
             this.GroupActualTargetSize.Controls.Add(this.Txt_MaxOvality);
@@ -1152,6 +1150,8 @@
             this.GroupActualTargetSize.Controls.Add(this.Label54);
             this.GroupActualTargetSize.Controls.Add(this.Label55);
             this.GroupActualTargetSize.Controls.Add(this.Txt_MaxDiameter);
+            this.GroupActualTargetSize.Controls.Add(this.maxDiameterUnitsTxt);
+            this.GroupActualTargetSize.Controls.Add(this.minDiameterUnitsTxt);
             this.GroupActualTargetSize.Location = new System.Drawing.Point(5, 384);
             this.GroupActualTargetSize.Name = "GroupActualTargetSize";
             this.GroupActualTargetSize.Size = new System.Drawing.Size(407, 137);
@@ -1162,22 +1162,22 @@
             // minDiameterUnitsTxt
             // 
             this.minDiameterUnitsTxt.AutoSize = true;
-            this.minDiameterUnitsTxt.Font = new System.Drawing.Font("Alef", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.minDiameterUnitsTxt.Font = new System.Drawing.Font("Alef", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.minDiameterUnitsTxt.Location = new System.Drawing.Point(175, 91);
             this.minDiameterUnitsTxt.Name = "minDiameterUnitsTxt";
-            this.minDiameterUnitsTxt.Size = new System.Drawing.Size(46, 28);
+            this.minDiameterUnitsTxt.Size = new System.Drawing.Size(178, 22);
             this.minDiameterUnitsTxt.TabIndex = 96;
-            this.minDiameterUnitsTxt.Text = "mm";
+            this.minDiameterUnitsTxt.Text = "@minDiameterUnitsTxt";
             // 
             // maxDiameterUnitsTxt
             // 
             this.maxDiameterUnitsTxt.AutoSize = true;
-            this.maxDiameterUnitsTxt.Font = new System.Drawing.Font("Alef", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.maxDiameterUnitsTxt.Font = new System.Drawing.Font("Alef", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.maxDiameterUnitsTxt.Location = new System.Drawing.Point(176, 37);
             this.maxDiameterUnitsTxt.Name = "maxDiameterUnitsTxt";
-            this.maxDiameterUnitsTxt.Size = new System.Drawing.Size(46, 28);
+            this.maxDiameterUnitsTxt.Size = new System.Drawing.Size(185, 22);
             this.maxDiameterUnitsTxt.TabIndex = 95;
-            this.maxDiameterUnitsTxt.Text = "mm";
+            this.maxDiameterUnitsTxt.Text = "@maxDIameterUnitsTxt";
             // 
             // Txt_MaxCompacity
             // 
@@ -1187,6 +1187,7 @@
             this.Txt_MaxCompacity.Name = "Txt_MaxCompacity";
             this.Txt_MaxCompacity.Size = new System.Drawing.Size(76, 40);
             this.Txt_MaxCompacity.TabIndex = 94;
+            this.Txt_MaxCompacity.Text = "@Txt_MaxCompacity";
             this.Txt_MaxCompacity.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // Label50
@@ -1207,6 +1208,7 @@
             this.Txt_MaxOvality.Name = "Txt_MaxOvality";
             this.Txt_MaxOvality.Size = new System.Drawing.Size(76, 40);
             this.Txt_MaxOvality.TabIndex = 92;
+            this.Txt_MaxOvality.Text = "@Txt_MaxOvality";
             this.Txt_MaxOvality.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // Txt_MinDiameter
@@ -1217,6 +1219,7 @@
             this.Txt_MinDiameter.Name = "Txt_MinDiameter";
             this.Txt_MinDiameter.Size = new System.Drawing.Size(98, 40);
             this.Txt_MinDiameter.TabIndex = 91;
+            this.Txt_MinDiameter.Text = "@Txt_MinDiameter";
             this.Txt_MinDiameter.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.Txt_MinDiameter.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Txt_MinDiameter_KeyPress);
             // 
@@ -1259,6 +1262,7 @@
             this.Txt_MaxDiameter.Name = "Txt_MaxDiameter";
             this.Txt_MaxDiameter.Size = new System.Drawing.Size(100, 40);
             this.Txt_MaxDiameter.TabIndex = 87;
+            this.Txt_MaxDiameter.Text = "@Txt_MaxDiameter";
             this.Txt_MaxDiameter.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.Txt_MaxDiameter.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Txt_MaxDiameter_KeyPress);
             // 
@@ -1324,7 +1328,7 @@
             this.Txt_Threshold.Name = "Txt_Threshold";
             this.Txt_Threshold.Size = new System.Drawing.Size(88, 40);
             this.Txt_Threshold.TabIndex = 12;
-            this.Txt_Threshold.Text = "0";
+            this.Txt_Threshold.Text = "@Txt_Threshold";
             this.Txt_Threshold.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // GroupBox11
@@ -1374,7 +1378,7 @@
             this.txtRoiHeight.Name = "txtRoiHeight";
             this.txtRoiHeight.Size = new System.Drawing.Size(100, 49);
             this.txtRoiHeight.TabIndex = 132;
-            this.txtRoiHeight.Text = "0";
+            this.txtRoiHeight.Text = "@txtRoiHeight";
             this.txtRoiHeight.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // btnDecrementRoiWidth
@@ -1427,7 +1431,7 @@
             this.txtRoiWidth.Name = "txtRoiWidth";
             this.txtRoiWidth.Size = new System.Drawing.Size(100, 49);
             this.txtRoiWidth.TabIndex = 87;
-            this.txtRoiWidth.Text = "0";
+            this.txtRoiWidth.Text = "@txtRoiWidth";
             this.txtRoiWidth.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // groupBox4
@@ -1542,7 +1546,7 @@
             this.txtMinBlobObjects.Name = "txtMinBlobObjects";
             this.txtMinBlobObjects.Size = new System.Drawing.Size(100, 44);
             this.txtMinBlobObjects.TabIndex = 88;
-            this.txtMinBlobObjects.Text = "0";
+            this.txtMinBlobObjects.Text = "@txtMinBlobObjects";
             this.txtMinBlobObjects.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtMinBlobObjects.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtMinBlobObjects_KeyPress);
             // 
@@ -1576,7 +1580,7 @@
             this.txtAlpha.Name = "txtAlpha";
             this.txtAlpha.Size = new System.Drawing.Size(100, 44);
             this.txtAlpha.TabIndex = 88;
-            this.txtAlpha.Text = "0";
+            this.txtAlpha.Text = "@txtAlpha";
             this.txtAlpha.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtAlpha.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtAlpha_KeyPress);
             // 
@@ -1631,9 +1635,9 @@
             this.euFactorTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.euFactorTxt.Location = new System.Drawing.Point(276, 129);
             this.euFactorTxt.Name = "euFactorTxt";
-            this.euFactorTxt.Size = new System.Drawing.Size(35, 24);
+            this.euFactorTxt.Size = new System.Drawing.Size(130, 24);
             this.euFactorTxt.TabIndex = 7;
-            this.euFactorTxt.Text = "1.0";
+            this.euFactorTxt.Text = "@euFactorTxt";
             // 
             // toolStrip1
             // 
