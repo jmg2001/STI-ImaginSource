@@ -147,6 +147,12 @@
     <Compile Include="Common\InputDlg2.designer.cs">
       <DependentUpon>InputDlg2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Common\LoginDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Common\LoginDlg.designer.cs">
+      <DependentUpon>LoginDlg.cs</DependentUpon>
+    </Compile>
     <Compile Include="Common\Utils.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
@@ -168,6 +174,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Common\InputDlg2.resx">
       <DependentUpon>InputDlg2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\LoginDlg.resx">
+      <DependentUpon>LoginDlg.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>

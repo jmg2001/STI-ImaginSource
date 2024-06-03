@@ -385,6 +385,9 @@ namespace STI
             try
             {
                 propertyMap.SetValue(ic4.PropId.TriggerSelector, "FrameStart");
+                propertyMap.SetValue(ic4.PropId.AcquisitionFrameRate, 30);
+                propertyMap.SetValue(PropId.GainAuto, false);
+                propertyMap.SetValue(PropId.Gain, 11);
             }
             catch { }
 
@@ -425,11 +428,9 @@ namespace STI
                             Console.WriteLine($"Failed to save buffer: {err.Message}");
                         }
 
-
-
-                            System.Threading.Thread.Sleep(100);
-                            Action safeTrigger = delegate { trigger(); };
-                            Invoke(safeTrigger);
+                        System.Threading.Thread.Sleep(100);
+                        Action safeTrigger = delegate { trigger(); };
+                        Invoke(safeTrigger);
 
                     }
                     else
@@ -448,6 +449,11 @@ namespace STI
 
             // Start the video stream into the sink
             StartLive();
+        }
+
+        private void DeviceLoseHandler()
+        {
+
         }
 
         private void viewLive(Bitmap image)
@@ -740,6 +746,19 @@ namespace STI
             settings.Save();
             //----------------Only for Debug, delete on production-----------------
 
+            try
+            {
+                CvInvoke.CvtColor(originalImageCV, originalImageCV, ColorConversion.Bgr2Gray);
+
+                CvInvoke.EqualizeHist(originalImageCV, originalImageCV);
+
+                CvInvoke.CvtColor(originalImageCV, originalImageCV, ColorConversion.Gray2Bgr);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
             Mat binarizedImage = new Mat();
 
             // Se binariza la imagen
@@ -940,8 +959,13 @@ namespace STI
 
         private void updateTemperatures()
         {
-            double deviceTemperature = 0;
-            double sensorTemperature = 0;
+            //double deviceTemperature = 0;
+ 
+            //    Console.WriteLine(propertyMap.Find("DeviceTemperature"));
+
+            ////Console.WriteLine(propertyMap.All.ToList().ToString());
+            //deviceTemp.Text = deviceTemperature.ToString();
+            //double sensorTemperature = 0;
         }
 
         private void requestModbusData()
@@ -1388,7 +1412,7 @@ namespace STI
 
             try
             {
-                CvInvoke.GaussianBlur(originalImageCV, originalImageCV, new Size(15, 15), 1.5);
+                //CvInvoke.GaussianBlur(originalImageCV, originalImageCV, new Size(15, 15), 1.5);
 
                 //CvInvoke.Imshow("Blur", originalImageCV);
 
@@ -3101,7 +3125,6 @@ namespace STI
                     gridType = gridT;
                     if (type != "")
                     {
-                        formatTxt.Text = type;
                         settings.Format = type;
                         settings.GridType = v;
                         grid = v;
@@ -3137,11 +3160,6 @@ namespace STI
 
         }
 
-        private void BtnLocalRemote_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void Chk_Threshold_Mode_CheckedChanged(object sender, EventArgs e)
         {
             autoThreshold = !autoThreshold;
@@ -3155,15 +3173,6 @@ namespace STI
 
             // Execute software trigger
             propertyMap.ExecuteCommand(ic4.PropId.TriggerSoftware);
-
-            //bool succes = m_AcqDevice.SetFeatureValue("TriggerSoftware", true);
-            //if (succes)
-            //{
-            //    Console.WriteLine("VirtualTrigger");
-            //    processImageBtn.Enabled = true;
-            //    processImageBtn.BackColor = Color.Silver;
-            //}
-
         }
 
         private void diametersTxtCheck_CheckedChanged(object sender, EventArgs e)
@@ -3528,27 +3537,27 @@ namespace STI
 
         private void loginToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //if (!authenticated)
-            //{
-            //    // Set new acquisition parameters
-            //    LoginDlg loginDlg = new LoginDlg(user);
+            if (!authenticated)
+            {
+                // Set new acquisition parameters
+                LoginDlg loginDlg = new LoginDlg(user);
 
-            //    if (loginDlg.ShowDialog() == DialogResult.OK)
-            //    {
-            //        authenticated = true;
-            //        configurationPage.Enabled = true;
-            //        advancedPage.Enabled = true;
-            //        MessageBox.Show("Authentication Succesfull");
-            //    }
-            //    else
-            //    {
-            //        MessageBox.Show("Authentication Failed");
-            //    }
-            //}
-            //else
-            //{
-            //    MessageBox.Show("You're already logged");
-            //}
+                if (loginDlg.ShowDialog() == DialogResult.OK)
+                {
+                    authenticated = true;
+                    configurationPage.Enabled = true;
+                    advancedPage.Enabled = true;
+                    MessageBox.Show("Authentication Succesfull");
+                }
+                else
+                {
+                    MessageBox.Show("Authentication Failed");
+                }
+            }
+            else
+            {
+                MessageBox.Show("You're already logged");
+            }
 
         }
 

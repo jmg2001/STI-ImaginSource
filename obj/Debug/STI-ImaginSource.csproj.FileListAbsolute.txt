@@ -152,3 +152,4 @@ C:\Users\Jesús\Documents\STI-ImaginSource\obj\Debug\STI-ImaginSource.csproj.Cor
 C:\Users\Jesús\Documents\STI-ImaginSource\obj\Debug\STI-ImaginSource.csproj.CopyComplete
 C:\Users\Jesús\Documents\STI-ImaginSource\obj\Debug\STI-ImaginSource.exe
 C:\Users\Jesús\Documents\STI-ImaginSource\obj\Debug\STI-ImaginSource.pdb
+C:\Users\Jesús\Documents\STI-ImaginSource\obj\Debug\STI.LoginDlg.resources

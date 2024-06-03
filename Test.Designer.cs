@@ -40,8 +40,6 @@
             this.leftPicture = new System.Windows.Forms.PictureBox();
             this.originalBox = new System.Windows.Forms.PictureBox();
             this.processROIBox = new System.Windows.Forms.PictureBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.formatTxt = new System.Windows.Forms.Label();
             this.display = new ic4.WinForms.Display();
             this.tablePage = new System.Windows.Forms.TabPage();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
@@ -112,8 +110,6 @@
             this.btnSetPointLocal = new System.Windows.Forms.Button();
             this.btnSetPointPLC = new System.Windows.Forms.Button();
             this.GroupActualTargetSize = new System.Windows.Forms.GroupBox();
-            this.minDiameterUnitsTxt = new System.Windows.Forms.Label();
-            this.maxDiameterUnitsTxt = new System.Windows.Forms.Label();
             this.Txt_MaxCompacity = new System.Windows.Forms.TextBox();
             this.Label50 = new System.Windows.Forms.Label();
             this.Txt_MaxOvality = new System.Windows.Forms.TextBox();
@@ -122,6 +118,8 @@
             this.Label54 = new System.Windows.Forms.Label();
             this.Label55 = new System.Windows.Forms.Label();
             this.Txt_MaxDiameter = new System.Windows.Forms.TextBox();
+            this.maxDiameterUnitsTxt = new System.Windows.Forms.Label();
+            this.minDiameterUnitsTxt = new System.Windows.Forms.Label();
             this.configurationPage = new System.Windows.Forms.TabPage();
             this.GB_Threshold = new System.Windows.Forms.GroupBox();
             this.btnAutoThreshold = new System.Windows.Forms.Button();
@@ -234,12 +232,14 @@
             this.loginToolStripMenuItem.Name = "loginToolStripMenuItem";
             this.loginToolStripMenuItem.Size = new System.Drawing.Size(49, 20);
             this.loginToolStripMenuItem.Text = "Login";
+            this.loginToolStripMenuItem.Click += new System.EventHandler(this.loginToolStripMenuItem_Click);
             // 
             // logoffToolStripMenuItem
             // 
             this.logoffToolStripMenuItem.Name = "logoffToolStripMenuItem";
             this.logoffToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
             this.logoffToolStripMenuItem.Text = "Logoff";
+            this.logoffToolStripMenuItem.Click += new System.EventHandler(this.logoffToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
@@ -269,8 +269,6 @@
             this.imagePage.Controls.Add(this.leftPicture);
             this.imagePage.Controls.Add(this.originalBox);
             this.imagePage.Controls.Add(this.processROIBox);
-            this.imagePage.Controls.Add(this.label8);
-            this.imagePage.Controls.Add(this.formatTxt);
             this.imagePage.Controls.Add(this.display);
             this.imagePage.Cursor = System.Windows.Forms.Cursors.Cross;
             this.imagePage.Location = new System.Drawing.Point(4, 44);
@@ -316,26 +314,6 @@
             this.processROIBox.TabIndex = 0;
             this.processROIBox.TabStop = false;
             this.processROIBox.Visible = false;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(644, 609);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(65, 29);
-            this.label8.TabIndex = 117;
-            this.label8.Text = "Grid:";
-            // 
-            // formatTxt
-            // 
-            this.formatTxt.AutoSize = true;
-            this.formatTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.formatTxt.Location = new System.Drawing.Point(715, 609);
-            this.formatTxt.Name = "formatTxt";
-            this.formatTxt.Size = new System.Drawing.Size(50, 29);
-            this.formatTxt.TabIndex = 118;
-            this.formatTxt.Text = "3x3";
             // 
             // display
             // 
@@ -1159,26 +1137,6 @@
             this.GroupActualTargetSize.TabStop = false;
             this.GroupActualTargetSize.Text = "Actual Target Sizes";
             // 
-            // minDiameterUnitsTxt
-            // 
-            this.minDiameterUnitsTxt.AutoSize = true;
-            this.minDiameterUnitsTxt.Font = new System.Drawing.Font("Alef", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.minDiameterUnitsTxt.Location = new System.Drawing.Point(175, 91);
-            this.minDiameterUnitsTxt.Name = "minDiameterUnitsTxt";
-            this.minDiameterUnitsTxt.Size = new System.Drawing.Size(178, 22);
-            this.minDiameterUnitsTxt.TabIndex = 96;
-            this.minDiameterUnitsTxt.Text = "@minDiameterUnitsTxt";
-            // 
-            // maxDiameterUnitsTxt
-            // 
-            this.maxDiameterUnitsTxt.AutoSize = true;
-            this.maxDiameterUnitsTxt.Font = new System.Drawing.Font("Alef", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.maxDiameterUnitsTxt.Location = new System.Drawing.Point(176, 37);
-            this.maxDiameterUnitsTxt.Name = "maxDiameterUnitsTxt";
-            this.maxDiameterUnitsTxt.Size = new System.Drawing.Size(185, 22);
-            this.maxDiameterUnitsTxt.TabIndex = 95;
-            this.maxDiameterUnitsTxt.Text = "@maxDIameterUnitsTxt";
-            // 
             // Txt_MaxCompacity
             // 
             this.Txt_MaxCompacity.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1265,6 +1223,26 @@
             this.Txt_MaxDiameter.Text = "@Txt_MaxDiameter";
             this.Txt_MaxDiameter.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.Txt_MaxDiameter.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Txt_MaxDiameter_KeyPress);
+            // 
+            // maxDiameterUnitsTxt
+            // 
+            this.maxDiameterUnitsTxt.AutoSize = true;
+            this.maxDiameterUnitsTxt.Font = new System.Drawing.Font("Alef", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.maxDiameterUnitsTxt.Location = new System.Drawing.Point(176, 37);
+            this.maxDiameterUnitsTxt.Name = "maxDiameterUnitsTxt";
+            this.maxDiameterUnitsTxt.Size = new System.Drawing.Size(185, 22);
+            this.maxDiameterUnitsTxt.TabIndex = 95;
+            this.maxDiameterUnitsTxt.Text = "@maxDIameterUnitsTxt";
+            // 
+            // minDiameterUnitsTxt
+            // 
+            this.minDiameterUnitsTxt.AutoSize = true;
+            this.minDiameterUnitsTxt.Font = new System.Drawing.Font("Alef", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.minDiameterUnitsTxt.Location = new System.Drawing.Point(175, 91);
+            this.minDiameterUnitsTxt.Name = "minDiameterUnitsTxt";
+            this.minDiameterUnitsTxt.Size = new System.Drawing.Size(178, 22);
+            this.minDiameterUnitsTxt.TabIndex = 96;
+            this.minDiameterUnitsTxt.Text = "@minDiameterUnitsTxt";
             // 
             // configurationPage
             // 
@@ -1797,7 +1775,6 @@
             this.menuStrip1.PerformLayout();
             this.mainTabs.ResumeLayout(false);
             this.imagePage.ResumeLayout(false);
-            this.imagePage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.rightPicture)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.leftPicture)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.originalBox)).EndInit();
@@ -1859,8 +1836,6 @@
         private System.Windows.Forms.TabPage imagePage;
         private System.Windows.Forms.PictureBox originalBox;
         private System.Windows.Forms.PictureBox processROIBox;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label formatTxt;
         private System.Windows.Forms.TabPage tablePage;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.TabPage productsPage;
